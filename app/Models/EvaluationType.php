@@ -6,7 +6,7 @@ use App\Models\Skills\Skill;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphedByMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class EvaluationType extends Model
 {
@@ -23,12 +23,12 @@ class EvaluationType extends Model
         return $this->belongsToMany(Course::class);
     }
 
-    public function gradeTypes(): MorphedByMany
+    public function gradeTypes(): MorphToMany
     {
         return $this->morphedByMany(GradeType::class, 'presettable', 'evaluation_type_presets');
     }
 
-    public function skills(): MorphedByMany
+    public function skills(): MorphToMany
     {
         return $this->morphedByMany(Skill::class, 'presettable', 'evaluation_type_presets');
     }

@@ -30,7 +30,6 @@ class EventCrudController extends CrudController
         CRUD::setModel(Event::class);
         CRUD::setRoute(config('backpack.base.route_prefix').'/event');
         CRUD::setEntityNameStrings(__('event'), __('events'));
-        CRUD::setCreateView('events.create');
     }
 
     public function setupListOperation()
