@@ -54,11 +54,6 @@
                     @yield('message')
                 </div>
 
-                <p>@lang("If you don't understand why you're seeing this error, please report it so it can be fixed")</p>
-                <p>@lang('Send an email and describe your issue:')
-                    <a href="mailto:incoming+thdebay-academico-site-17656010-issue-@incoming.gitlab.com">incoming+thdebay-academico-site-17656010-issue-@incoming.gitlab.com</a>
-                </p>
-
                 <a href="{{ app('router')->has('home') ? route('home') : url('/') }}">
                     <button class="bg-transparent text-grey-darkest font-bold uppercase tracking-wide py-3 px-6 border-2 border-grey-light hover:border-grey rounded-lg">
                         {{ __('Go Home') }}
