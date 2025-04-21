@@ -61,9 +61,9 @@
             <td class="center">
                 <p style="font-family:frenchscript; font-size: 20pt;">¡Felicitaciones, siga adelante!</p>
                 <div>
-                    <img src="{{ storage_path('afloja/sig_camille.png') }}" style="width: 4cm; margin-bottom: 0.5cm; ">
-                    <p class="t14">Sra. Camille Hannequart</p>
-                    <p class="t11">Directora</p>
+                    <img src="{{ config('certificates-generation.signature_path') }}" style="width: 4cm; margin-bottom: 0.5cm; ">
+                    <p class="t14">{{ config('certificates-generation.signer_name')}}</p>
+                    <p class="t11">{{ config('certificates-generation.signer_function')}}</p>
                 </div>
             </td>
         </tr>
