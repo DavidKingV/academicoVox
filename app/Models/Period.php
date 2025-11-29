@@ -48,7 +48,7 @@ class Period extends Model
      * Return the current period to be used as a default system-wide.
      * First look in Config DB table; otherwise select current or closest next period.
      */
-    public static function get_default_period(): self
+    public static function get_default_period(): Period
     {
         $configPeriod = Config::where('name', 'current_period');
 
@@ -57,12 +57,12 @@ class Period extends Model
 
             if (self::where('id', $currentPeriodId)->count() > 0) {
                 return self::find($currentPeriodId);
-            } else {
-                return self::where('end', '>=', date('Y-m-d'))->first();
+            } elseif ($nextActivePeriod = self::where('end', '>=', date('Y-m-d'))->first()) {
+                return $nextActivePeriod;
             }
         }
 
-        return self::first();
+        return self::orderByDesc('end')->first();
     }
 
     /**
