@@ -7,18 +7,9 @@ use App\Models\Enrollment;
 use App\Models\Partner;
 use App\Models\Period;
 use App\Models\Year;
-use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
-
-class DateRange
-{
-    public function __construct(
-        public DateTime $start,
-        public DateTime $end,
-    ) {}
-}
 
 class StatService
 {
