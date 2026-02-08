@@ -22,6 +22,8 @@ class YearResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Academic');

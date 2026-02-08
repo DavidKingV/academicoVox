@@ -42,6 +42,8 @@ class PeriodResource extends Resource
         return __('Periods');
     }
 
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
     public static function form(Schema $schema): Schema
     {
         return $schema

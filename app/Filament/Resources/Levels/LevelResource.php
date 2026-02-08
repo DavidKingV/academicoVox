@@ -29,6 +29,8 @@ class LevelResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Academic');

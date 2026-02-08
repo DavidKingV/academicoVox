@@ -44,6 +44,8 @@ class RhythmResource extends Resource
         return __('Rhythms');
     }
 
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
     public static function form(Schema $schema): Schema
     {
         return $schema
