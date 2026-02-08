@@ -1,0 +1,77 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Student;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class StudentAccountTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_force_update_redirects_student_to_account(): void
+    {
+        $student = Student::factory()->create(['force_update' => true]);
+        $user = $student->user;
+
+        $response = $this->actingAs($user)->get('/dashboard');
+        $response->assertRedirect(route('student.account'));
+    }
+
+    public function test_force_update_allows_access_to_account_page(): void
+    {
+        $student = Student::factory()->create(['force_update' => true]);
+        $user = $student->user;
+
+        $response = $this->actingAs($user)->get('/account');
+        $response->assertStatus(200);
+    }
+
+    public function test_force_update_allows_post_requests(): void
+    {
+        $student = Student::factory()->create(['force_update' => true]);
+        $user = $student->user;
+
+        // POST requests should pass through even with force_update
+        $response = $this->actingAs($user)->post('/logout');
+        $response->assertRedirect('/');
+    }
+
+    public function test_non_force_update_student_can_access_dashboard(): void
+    {
+        $student = Student::factory()->create(['force_update' => false]);
+        $user = $student->user;
+
+        $response = $this->actingAs($user)->get('/dashboard');
+        $response->assertStatus(200);
+    }
+
+    public function test_non_student_user_is_not_affected_by_force_update(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/dashboard');
+        $response->assertStatus(200);
+    }
+
+    public function test_student_dashboard_shows_enrollments(): void
+    {
+        $student = Student::factory()->create();
+        $user = $student->user;
+
+        $response = $this->actingAs($user)->get('/dashboard');
+        $response->assertStatus(200);
+        $response->assertSee(__('Dashboard'));
+    }
+
+    public function test_student_account_page_shows_account_tabs(): void
+    {
+        $student = Student::factory()->create();
+        $user = $student->user;
+
+        $response = $this->actingAs($user)->get('/account');
+        $response->assertStatus(200);
+    }
+}

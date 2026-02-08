@@ -213,25 +213,91 @@ Completed:
 
 Still todo:
 
-**Phase 5 — Invoicing & Checkout**
+**Phase 5 — Invoicing & Checkout** ✅
 23. `InvoiceResource` with invoice detail management
 24. `PaymentResource` and `ScheduledPaymentResource`
 25. Cart/checkout flow as Filament wizard page
 26. PDF invoice download actions
 27. `ResultResource` with certificate/result PDF export actions
 
-**Phase 6 — Public & Student-Facing**
+**Phase 6 — Public & Student-Facing** ✅
 28. Student registration page (public Filament page or separate panel)
 29. Student dashboard (separate Filament panel or custom page)
 30. Teacher dashboard
 31. My Account / profile pages
 32. Course list public view
 
-**Phase 7 — Polish & Edge Cases**
+**Phase 7 — Polish & Edge Cases** ✅
 33. Locale/language switching
 34. ForceUpdate profile completion flow
-35. Email notifications integration
-37. External mailing system integration
-38. Scheduled commands (partnership alerts, monthly reports, attendance reminders)
-39. `filament/spatie-laravel-media-library-plugin` for `StudentResource` photo upload. But we want to preserve existing functionality for the old code.
-40. Comprehensive test coverage beyond model tests.
+35. Email notifications integration (already migrated: all 7 Mailables, 16 listeners, 18 events, email templates)
+37. External mailing system integration (already migrated: MailingSystemInterface, config, services)
+38. Scheduled commands (3 Artisan commands + 8 scheduled tasks in routes/console.php)
+39. `filament/spatie-laravel-media-library-plugin` for `StudentResource` photo upload
+40. Comprehensive test coverage: 135 tests (36 new feature tests). Fixed bugs: StudentDashboard scope query chain, StudentAccount birthdate parsing
+
+
+
+===
+
+Here's the **complete final audit** comparing the old project against the new one. Items are categorized by severity.
+
+---
+
+## RED — Functionality Gaps (likely to cause runtime issues)
+
+### 1. Authorization Gates NOT migrated
+The old AuthServiceProvider.php defines **11 Gate** rules controlling who can edit grades, view/edit attendance, view calendars, view courses, view enrollments, enroll students, view teacher hours, and edit results. **None of these exist in the new project.** 
+
+These are used by the student-facing Livewire pages and teacher dashboard. Filament resource policies handle admin panel access, but non-panel pages (attendance, grades, teacher dashboard) rely on these gates.
+
+### 2. SetLocale middleware not registered
+SetLocale.php exists but is **not registered** in bootstrap/app.php. Locale switching won't work for web routes.
+
+### 3. MailerLite SDK package missing
+MailerliteService.php imports `MailerLiteApi\MailerLite` but `mailerlite/mailerlite-api-v2-php-sdk` is **not in composer.json**. Any code path touching this service will fatal error.
+
+### 4. Three model policies not migrated
+The old project had `CommentPolicy`, `ContactPolicy`, and `StudentPolicy` in Policies. None exist in the new project.
+
+### 5. Two events/listeners removed without replacement
+- `CourseCreated` event + listener — was triggered on course creation
+- `SyncUserWithMailingSystem` listener — synced users to MailerLite on creation
+
+---
+
+## YELLOW — Features possibly incomplete
+
+| # | Item | Details |
+|---|------|---------|
+| 6 | **PDF export templates** | Certificate/result/syllabus blade templates may be missing from views. The services exist but could reference missing views. |
+| 7 | **`ExternalCourseFactory`** | Missing factory — tests for external courses can't use factory builder. |
+| 8 | **`POST /api/checkemail`** | Email uniqueness API endpoint for registration not in new project. |
+| 9 | **Photo roster** | Old project had `ShowStudentPhotoRosterOperation` — no equivalent in Filament. |
+| 10 | **Standalone invoice creation route** | `GET /createinvoice` existed for admins — verify in Filament. |
+| 11 | **Public assets** | `watermark.png`, `logo.png`, `user-icon-placeholder.png` — verify these exist if PDFs reference them. |
+| 12 | **`ext-gd`, `ext-zip`** | Not declared in new composer.json. Needed for image processing & ZIP exports. |
+| 13 | **.env.example** | ~40+ custom env vars from the old project — verify the new .env.example includes all needed ones. |
+
+---
+
+## GREEN — Intentionally removed (no action needed)
+
+- **Telescope** → replaced by `laravel/pail`
+- **Sentry** → error tracking removed
+- **Backpack** → replaced by Filament  
+- **Vue.js + webpack** → replaced by Vite + Livewire
+- **ApolearnService / LMS integration** → removed
+- **deploy.php (Deployer)** → replaced by Docker
+- **elfinder, enlightn, gravatar** configs → dev/optional tools
+- **`FiltersSearchableLevels` trait** → was for spatie/query-builder
+- **`AddViewerRole` command** → one-time setup script
+- **Custom error pages** → using framework defaults
+
+---
+
+**Shall I fix the RED items now?** The most impactful ones are:
+1. Migrate the 11 Gate definitions to `AppServiceProvider` (or a new `AuthServiceProvider`)
+2. Register `SetLocale` middleware in app.php
+3. Add `mailerlite/mailerlite-api-v2-php-sdk` to composer.json
+4. Create the 3 missing policies

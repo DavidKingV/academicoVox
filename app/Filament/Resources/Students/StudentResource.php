@@ -13,10 +13,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Tabs;
@@ -86,9 +86,10 @@ class StudentResource extends Resource
                                     ->required()
                                     ->default(0)
                                     ->inline(),
-                                FileUpload::make('profile_picture')
+                                SpatieMediaLibraryFileUpload::make('profile_picture')
+                                    ->collection('profile-picture')
+                                    ->conversion('thumb')
                                     ->image()
-                                    ->directory('student-photos')
                                     ->nullable(),
                                 Select::make('profession_id')
                                     ->relationship('profession', 'name')

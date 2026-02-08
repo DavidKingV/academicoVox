@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\Results;
 
 use App\Filament\Resources\Results\Pages\ManageResults;
+use App\Interfaces\CertificatesInterface;
 use App\Models\Enrollment;
 use App\Models\Period;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -116,6 +118,26 @@ class ResultResource extends Resource
                 SelectFilter::make('result_type')
                     ->label(__('Result'))
                     ->relationship('result.result_name', 'name'),
+            ])
+            ->recordActions([
+                Action::make('export_result')
+                    ->label(__('Result PDF'))
+                    ->icon(Heroicon::OutlinedDocumentArrowDown)
+                    ->visible(fn (Enrollment $record) => $record->result !== null)
+                    ->action(function (Enrollment $record) {
+                        $service = app(CertificatesInterface::class);
+
+                        return $service->exportResult($record);
+                    }),
+                Action::make('export_certificate')
+                    ->label(__('Certificate'))
+                    ->icon(Heroicon::OutlinedAcademicCap)
+                    ->visible(fn (Enrollment $record) => $record->result !== null)
+                    ->action(function (Enrollment $record) {
+                        $service = app(CertificatesInterface::class);
+
+                        return $service->exportCertificate($record);
+                    }),
             ]);
     }
 
