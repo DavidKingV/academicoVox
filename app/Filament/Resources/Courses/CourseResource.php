@@ -83,7 +83,7 @@ class CourseResource extends Resource
                                     ->prefix(config('academico.currency_position') === 'before' ? config('academico.currency_symbol') : null)
                                     ->suffix(config('academico.currency_position') === 'after' ? config('academico.currency_symbol') : null),
                                 TextInput::make('price_b')
-                                    ->label('Price B')
+                                    ->label(__('Price B'))
                                     ->numeric()
                                     ->minValue(0)
                                     ->step(0.01)
@@ -91,7 +91,7 @@ class CourseResource extends Resource
                                     ->suffix(config('academico.currency_position') === 'after' ? config('academico.currency_symbol') : null)
                                     ->visible(fn (): bool => (bool) config('invoicing.price_categories_enabled')),
                                 TextInput::make('price_c')
-                                    ->label('Price C')
+                                    ->label(__('Price C'))
                                     ->numeric()
                                     ->minValue(0)
                                     ->step(0.01)
@@ -104,7 +104,7 @@ class CourseResource extends Resource
                                     ->suffix('h')
                                     ->nullable(),
                                 TextInput::make('remote_volume')
-                                    ->label('Remote volume')
+                                    ->label(__('Remote volume'))
                                     ->numeric()
                                     ->minValue(0)
                                     ->suffix('h')
@@ -114,7 +114,7 @@ class CourseResource extends Resource
                                     ->integer()
                                     ->minValue(0),
                                 Checkbox::make('exempt_attendance')
-                                    ->label('Exempt from attendance'),
+                                    ->label(__('Exempt from attendance')),
                                 ColorPicker::make('color')
                                     ->nullable(),
                             ]),
@@ -145,7 +145,7 @@ class CourseResource extends Resource
                                     ->preload()
                                     ->nullable(),
                                 Checkbox::make('marked')
-                                    ->label('Evaluation ready')
+                                    ->label(__('Evaluation ready'))
                                     ->visibleOn('edit'),
                             ]),
 
@@ -163,7 +163,7 @@ class CourseResource extends Resource
                                     ->required(),
                                 Repeater::make('courseTimes')
                                     ->relationship('times')
-                                    ->label('Recurring schedule')
+                                    ->label(__('Recurring schedule'))
                                     ->schema([
                                         Select::make('day')
                                             ->options([
@@ -208,14 +208,14 @@ class CourseResource extends Resource
                     ->suffix('h')
                     ->sortable(),
                 TextColumn::make('teacher.name')
-                    ->label('Teacher')
+                    ->label(__('Teacher'))
                     ->sortable(),
                 TextColumn::make('room.name')
                     ->sortable(),
                 TextColumn::make('course_times')
-                    ->label('Schedule'),
+                    ->label(__('Schedule')),
                 TextColumn::make('course_enrollments_count')
-                    ->label('Enrollments')
+                    ->label(__('Enrollments'))
                     ->sortable(),
                 TextColumn::make('start_date')
                     ->date()
@@ -225,27 +225,27 @@ class CourseResource extends Resource
                     ->sortable(),
                 IconColumn::make('marked')
                     ->boolean()
-                    ->label('Eval'),
+                    ->label(__('Eval')),
             ])
             ->filters([
                 SelectFilter::make('period_id')
                     ->relationship('period', 'name')
-                    ->label('Period')
+                    ->label(__('Period'))
                     ->default($defaultPeriod?->id)
                     ->preload(),
                 SelectFilter::make('rhythm_id')
                     ->relationship('rhythm', 'name')
-                    ->label('Rhythm')
+                    ->label(__('Rhythm'))
                     ->preload(),
                 SelectFilter::make('teacher_id')
                     ->relationship('teacher', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->label('Teacher')
+                    ->label(__('Teacher'))
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('level_id')
                     ->relationship('level', 'name')
-                    ->label('Level')
+                    ->label(__('Level'))
                     ->preload(),
             ])
             ->defaultSort('start_date', 'desc')

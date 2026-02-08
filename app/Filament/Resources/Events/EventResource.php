@@ -83,17 +83,17 @@ class EventResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('course.name')
-                    ->label('Course')
+                    ->label(__('Course'))
                     ->sortable(),
                 TextColumn::make('volume')
-                    ->label('Hours')
+                    ->label(__('Hours'))
                     ->formatStateUsing(fn ($state): string => number_format($state, 1).'h')
                     ->sortable(),
                 TextColumn::make('teacher.name')
-                    ->label('Teacher')
+                    ->label(__('Teacher'))
                     ->sortable(),
                 TextColumn::make('room.name')
-                    ->label('Room')
+                    ->label(__('Room'))
                     ->sortable(),
                 TextColumn::make('start')
                     ->dateTime()
@@ -115,13 +115,13 @@ class EventResource extends Resource
                             ->when($data['until'], fn (Builder $q, $date) => $q->where('start', '<=', $date.' 23:59:59'));
                     }),
                 TernaryFilter::make('orphan')
-                    ->label('No course')
+                    ->label(__('No course'))
                     ->queries(
                         true: fn (Builder $query) => $query->whereNull('course_id'),
                         false: fn (Builder $query) => $query->whereNotNull('course_id'),
                     ),
                 TernaryFilter::make('unassigned')
-                    ->label('No teacher')
+                    ->label(__('No teacher'))
                     ->queries(
                         true: fn (Builder $query) => $query->unassigned(),
                         false: fn (Builder $query) => $query->whereNotNull('teacher_id'),
@@ -129,7 +129,7 @@ class EventResource extends Resource
                 SelectFilter::make('teacher_id')
                     ->relationship('teacher', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->label('Teacher')
+                    ->label(__('Teacher'))
                     ->searchable()
                     ->preload(),
             ])

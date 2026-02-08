@@ -91,7 +91,7 @@ class PeriodResource extends Resource
             ->filters([
                 SelectFilter::make('year_id')
                     ->relationship('year', 'name')
-                    ->label('Year')
+                    ->label(__('Year'))
                     ->preload(),
             ])
             ->recordActions([

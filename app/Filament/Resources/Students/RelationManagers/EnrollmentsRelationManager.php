@@ -16,12 +16,12 @@ class EnrollmentsRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('course.name')
-                    ->label('Course')
+                    ->label(__('Course'))
                     ->searchable(),
                 TextColumn::make('course.period.name')
-                    ->label('Period'),
+                    ->label(__('Period')),
                 TextColumn::make('enrollmentStatus.name')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Pending' => 'warning',
@@ -29,10 +29,10 @@ class EnrollmentsRelationManager extends RelationManager
                         default => 'gray',
                     }),
                 TextColumn::make('total_price')
-                    ->label('Price')
+                    ->label(__('Price'))
                     ->money(config('academico.currency_code', 'USD')),
                 TextColumn::make('created_at')
-                    ->label('Enrolled')
+                    ->label(__('Enrolled'))
                     ->date(),
             ]);
     }

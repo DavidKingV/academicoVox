@@ -55,7 +55,7 @@ class GradeTypeResource extends Resource
                     ->minValue(0),
                 Select::make('grade_type_category_id')
                     ->relationship('category', 'name')
-                    ->label('Category')
+                    ->label(__('Category'))
                     ->searchable()
                     ->preload(),
             ]);
@@ -71,7 +71,7 @@ class GradeTypeResource extends Resource
                 TextColumn::make('total')
                     ->sortable(),
                 TextColumn::make('category.name')
-                    ->label('Category')
+                    ->label(__('Category'))
                     ->sortable(),
             ])
             ->filters([

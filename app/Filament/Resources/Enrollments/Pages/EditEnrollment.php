@@ -14,7 +14,7 @@ class EditEnrollment extends EditRecord
     {
         return [
             Action::make('cancel')
-                ->label('Cancel Enrollment')
+                ->label(__('Cancel Enrollment'))
                 ->color('danger')
                 ->icon('heroicon-o-x-circle')
                 ->requiresConfirmation()

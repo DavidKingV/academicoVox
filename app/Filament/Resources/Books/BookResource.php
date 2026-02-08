@@ -68,7 +68,7 @@ class BookResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price_with_currency')
-                    ->label('Price'),
+                    ->label(__('Price')),
                 TextColumn::make('product_code'),
             ])
             ->filters([

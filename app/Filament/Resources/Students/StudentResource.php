@@ -60,11 +60,11 @@ class StudentResource extends Resource
                         Tab::make('Student Info')
                             ->schema([
                                 TextInput::make('firstname')
-                                    ->label('First name')
+                                    ->label(__('First name'))
                                     ->required()
                                     ->maxLength(30),
                                 TextInput::make('lastname')
-                                    ->label('Last name')
+                                    ->label(__('Last name'))
                                     ->required()
                                     ->maxLength(30),
                                 TextInput::make('email')
@@ -72,12 +72,12 @@ class StudentResource extends Resource
                                     ->nullable()
                                     ->maxLength(60),
                                 TextInput::make('idnumber')
-                                    ->label('ID Number')
+                                    ->label(__('ID Number'))
                                     ->nullable(),
                                 DatePicker::make('birthdate')
                                     ->nullable(),
                                 Radio::make('gender_id')
-                                    ->label('Gender')
+                                    ->label(__('Gender'))
                                     ->options([
                                         0 => __('Other'),
                                         1 => __('Female'),
@@ -108,10 +108,10 @@ class StudentResource extends Resource
                                     ->nullable(),
                                 Repeater::make('phone')
                                     ->relationship()
-                                    ->label('Phone numbers')
+                                    ->label(__('Phone numbers'))
                                     ->schema([
                                         TextInput::make('phone_number')
-                                            ->label('Phone number')
+                                            ->label(__('Phone number'))
                                             ->required(),
                                     ])
                                     ->defaultItems(0)
@@ -140,11 +140,11 @@ class StudentResource extends Resource
                         Tab::make('Invoicing Info')
                             ->schema([
                                 TextInput::make('iban')
-                                    ->label('IBAN')
+                                    ->label(__('IBAN'))
                                     ->nullable()
                                     ->maxLength(90),
                                 TextInput::make('bic')
-                                    ->label('BIC')
+                                    ->label(__('BIC'))
                                     ->nullable()
                                     ->maxLength(30),
                             ]),
@@ -157,29 +157,29 @@ class StudentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('idnumber')
-                    ->label('ID')
+                    ->label(__('ID'))
                     ->searchable(),
                 TextColumn::make('user.lastname')
-                    ->label('Last name')
+                    ->label(__('Last name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.firstname')
-                    ->label('First name')
+                    ->label(__('First name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable(),
                 TextColumn::make('student_age')
-                    ->label('Age'),
+                    ->label(__('Age')),
                 TextColumn::make('phone.phone_number')
-                    ->label('Phone')
+                    ->label(__('Phone'))
                     ->badge(),
             ])
             ->filters([
                 SelectFilter::make('institution_id')
                     ->relationship('institution', 'name')
-                    ->label('Institution')
+                    ->label(__('Institution'))
                     ->preload()
                     ->searchable(),
             ])

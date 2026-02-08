@@ -52,7 +52,7 @@ class EnrollmentResource extends Resource
                     ->preload()
                     ->searchable(),
                 TextInput::make('total_price')
-                    ->label('Price')
+                    ->label(__('Price'))
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
@@ -79,22 +79,22 @@ class EnrollmentResource extends Resource
                 TextColumn::make('id')
                     ->sortable(),
                 TextColumn::make('student.user.lastname')
-                    ->label('Last name')
+                    ->label(__('Last name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('student.user.firstname')
-                    ->label('First name')
+                    ->label(__('First name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('course.name')
-                    ->label('Course')
+                    ->label(__('Course'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('course.period.name')
-                    ->label('Period')
+                    ->label(__('Period'))
                     ->sortable(),
                 TextColumn::make('enrollmentStatus.name')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Pending' => 'warning',
@@ -102,15 +102,15 @@ class EnrollmentResource extends Resource
                         default => 'gray',
                     }),
                 TextColumn::make('total_price')
-                    ->label('Price')
+                    ->label(__('Price'))
                     ->money(config('academico.currency_code', 'USD'))
                     ->sortable(),
                 TextColumn::make('student.user.email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('scholarships.name')
-                    ->label('Scholarships')
+                    ->label(__('Scholarships'))
                     ->badge()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -123,10 +123,10 @@ class EnrollmentResource extends Resource
                     })
                     ->options(fn () => Period::pluck('name', 'id'))
                     ->default($defaultPeriod?->id)
-                    ->label('Period'),
+                    ->label(__('Period')),
                 SelectFilter::make('status_id')
                     ->relationship('enrollmentStatus', 'name')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->multiple()
                     ->preload(),
             ])

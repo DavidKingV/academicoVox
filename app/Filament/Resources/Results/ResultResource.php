@@ -65,7 +65,7 @@ class ResultResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('ID'))
                     ->sortable(),
                 TextColumn::make('student.name')
                     ->label(__('Student'))

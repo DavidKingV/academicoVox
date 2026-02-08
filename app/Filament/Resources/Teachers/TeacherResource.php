@@ -51,11 +51,11 @@ class TeacherResource extends Resource
         return $schema
             ->components([
                 TextInput::make('firstname')
-                    ->label('First name')
+                    ->label(__('First name'))
                     ->required()
                     ->maxLength(255),
                 TextInput::make('lastname')
-                    ->label('Last name')
+                    ->label(__('Last name'))
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
@@ -63,7 +63,7 @@ class TeacherResource extends Resource
                     ->required()
                     ->maxLength(255),
                 TextInput::make('max_week_hours')
-                    ->label('Max weekly hours')
+                    ->label(__('Max weekly hours'))
                     ->numeric()
                     ->step(0.01)
                     ->nullable(),
@@ -77,18 +77,18 @@ class TeacherResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('user.lastname')
-                    ->label('Last name')
+                    ->label(__('Last name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.firstname')
-                    ->label('First name')
+                    ->label(__('First name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable(),
                 TextColumn::make('max_week_hours')
-                    ->label('Max hours/week')
+                    ->label(__('Max hours/week'))
                     ->numeric(decimalPlaces: 2)
                     ->sortable(),
                 TextColumn::make('hired_at')

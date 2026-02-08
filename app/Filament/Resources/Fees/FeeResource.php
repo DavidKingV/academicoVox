@@ -60,7 +60,7 @@ class FeeResource extends Resource
                 TextInput::make('product_code')
                     ->nullable(),
                 Checkbox::make('default')
-                    ->label('Add automatically to every order'),
+                    ->label(__('Add automatically to every order')),
             ]);
     }
 
@@ -77,7 +77,7 @@ class FeeResource extends Resource
                 TextColumn::make('product_code'),
                 IconColumn::make('default')
                     ->boolean()
-                    ->label('Auto-add'),
+                    ->label(__('Auto-add')),
             ])
             ->filters([
                 //

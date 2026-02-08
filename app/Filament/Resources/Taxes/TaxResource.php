@@ -49,7 +49,7 @@ class TaxResource extends Resource
                     ->maxLength(40)
                     ->unique(ignoreRecord: true),
                 TextInput::make('value')
-                    ->label('Value (%)')
+                    ->label(__('Value (%)'))
                     ->required()
                     ->numeric()
                     ->minValue(0)

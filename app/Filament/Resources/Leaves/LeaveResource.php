@@ -67,7 +67,7 @@ class LeaveResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('teacher.name')
-                    ->label('Teacher')
+                    ->label(__('Teacher'))
                     ->searchable(query: function (Builder $query, string $search) {
                         $query->whereHas('teacher.user', function (Builder $q) use ($search) {
                             $q->where('firstname', 'like', "%{$search}%")
@@ -76,7 +76,7 @@ class LeaveResource extends Resource
                     })
                     ->sortable(),
                 TextColumn::make('leaveType.name')
-                    ->label('Type')
+                    ->label(__('Type'))
                     ->sortable(),
                 TextColumn::make('date')
                     ->date()
@@ -87,7 +87,7 @@ class LeaveResource extends Resource
                 SelectFilter::make('teacher_id')
                     ->relationship('teacher', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->label('Teacher')
+                    ->label(__('Teacher'))
                     ->searchable()
                     ->preload(),
                 Filter::make('date_range')

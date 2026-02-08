@@ -19,7 +19,7 @@ class CreateLeave extends CreateRecord
     {
         return [
             Select::make('teacher_ids')
-                ->label('Teachers')
+                ->label(__('Teachers'))
                 ->relationship('teacher', 'id')
                 ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                 ->multiple()
@@ -31,10 +31,10 @@ class CreateLeave extends CreateRecord
                 ->required()
                 ->preload(),
             DatePicker::make('start_date')
-                ->label('Start date')
+                ->label(__('Start date'))
                 ->required(),
             DatePicker::make('end_date')
-                ->label('End date')
+                ->label(__('End date'))
                 ->required(),
         ];
     }

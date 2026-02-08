@@ -27,7 +27,7 @@ class ContactsRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
                 TextInput::make('idnumber')
-                    ->label('ID Number')
+                    ->label(__('ID Number'))
                     ->nullable(),
                 TextInput::make('email')
                     ->email()
@@ -56,9 +56,9 @@ class ContactsRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('email'),
                 TextColumn::make('relationship.name')
-                    ->label('Relationship'),
+                    ->label(__('Relationship')),
                 TextColumn::make('phone.phone_number')
-                    ->label('Phone')
+                    ->label(__('Phone'))
                     ->badge(),
             ])
             ->recordActions([

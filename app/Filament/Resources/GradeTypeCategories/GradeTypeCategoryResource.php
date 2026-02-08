@@ -47,7 +47,7 @@ class GradeTypeCategoryResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Label')
+                    ->label(__('Label'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255)
@@ -60,7 +60,7 @@ class GradeTypeCategoryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Label')
+                    ->label(__('Label'))
                     ->searchable()
                     ->sortable(),
             ])

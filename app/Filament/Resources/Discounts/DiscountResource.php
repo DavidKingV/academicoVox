@@ -49,7 +49,7 @@ class DiscountResource extends Resource
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('value')
-                    ->label('Discount Value (%)')
+                    ->label(__('Discount Value (%)'))
                     ->required()
                     ->numeric()
                     ->minValue(0)
