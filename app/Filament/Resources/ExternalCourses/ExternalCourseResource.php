@@ -20,7 +20,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class ExternalCourseResource extends Resource
 {
@@ -28,11 +27,14 @@ class ExternalCourseResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGlobeAlt;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
-
     protected static ?int $navigationSort = 9;
 
     protected static ?string $slug = 'external-courses';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
 
     public static function getModelLabel(): string
     {
@@ -82,7 +84,8 @@ class ExternalCourseResource extends Resource
                     ->prefix(config('academico.currency_symbol', '€')),
                 Select::make('teacher_id')
                     ->label(__('Teacher'))
-                    ->relationship('teacher', 'name')
+                    ->relationship('teacher', titleAttribute: 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->preload()
                     ->searchable(),
                 Select::make('room_id')
@@ -141,9 +144,8 @@ class ExternalCourseResource extends Resource
                 TextColumn::make('hourly_price')
                     ->label(__('Price'))
                     ->money(config('academico.currency_code', 'EUR')),
-                TextColumn::make('teacher.name')
-                    ->label(__('Teacher'))
-                    ->sortable(),
+                TextColumn::make('teacher.user.name')
+                    ->label(__('Teacher')),
                 TextColumn::make('room.name')
                     ->label(__('Room')),
                 TextColumn::make('course_times')
@@ -174,7 +176,8 @@ class ExternalCourseResource extends Resource
                     ->relationship('rhythm', 'name'),
                 SelectFilter::make('teacher_id')
                     ->label(__('Teacher'))
-                    ->relationship('teacher', 'name'),
+                    ->relationship('teacher', titleAttribute: 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
                 SelectFilter::make('level_id')
                     ->label(__('Level'))
                     ->relationship('level', 'name'),

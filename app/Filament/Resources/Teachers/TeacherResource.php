@@ -24,7 +24,6 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use UnitEnum;
 
 class TeacherResource extends Resource
 {
@@ -32,7 +31,20 @@ class TeacherResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
-    protected static string|UnitEnum|null $navigationGroup = 'People';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Teacher');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Teachers');
+    }
 
     public static function form(Schema $schema): Schema
     {

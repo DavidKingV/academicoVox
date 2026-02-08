@@ -8,13 +8,10 @@ use App\Models\Level;
 use App\Models\Period;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class AttendanceByLevelReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bars-3';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 11;
 
@@ -109,6 +106,11 @@ class AttendanceByLevelReport extends Page
             'labels' => $labels,
             'datasets' => array_values($datasets),
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

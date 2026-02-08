@@ -15,7 +15,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class MemberResource extends Resource
 {
@@ -23,7 +22,20 @@ class MemberResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static string|UnitEnum|null $navigationGroup = 'People';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Member');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Members');
+    }
 
     public static function form(Schema $schema): Schema
     {

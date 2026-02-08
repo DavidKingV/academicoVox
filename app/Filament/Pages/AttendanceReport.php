@@ -9,13 +9,10 @@ use App\Models\Event;
 use App\Models\Period;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class AttendanceReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 3;
 
@@ -112,6 +109,11 @@ class AttendanceReport extends Page
             'labels' => $labels,
             'datasets' => array_values($datasets),
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

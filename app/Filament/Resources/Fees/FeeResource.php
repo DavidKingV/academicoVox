@@ -17,7 +17,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class FeeResource extends Resource
 {
@@ -25,7 +24,22 @@ class FeeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Finance';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Fee');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Fees');
+    }
 
     public static function form(Schema $schema): Schema
     {

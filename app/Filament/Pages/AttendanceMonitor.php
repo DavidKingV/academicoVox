@@ -9,13 +9,10 @@ use App\Models\Period;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class AttendanceMonitor extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Attendance';
 
     protected static ?int $navigationSort = 1;
 
@@ -103,6 +100,11 @@ class AttendanceMonitor extends Page
         }
 
         $this->coursesData = collect($coursesdata)->sortByDesc('missing')->values()->toArray();
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Attendance');
     }
 
     public static function getNavigationLabel(): string

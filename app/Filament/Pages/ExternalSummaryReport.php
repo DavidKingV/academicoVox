@@ -7,13 +7,10 @@ use App\Services\StatService;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class ExternalSummaryReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 8;
 
@@ -77,6 +74,11 @@ class ExternalSummaryReport extends Page
                 'head_count' => $course->head_count ?? 0,
                 'volume' => $course->total_volume,
             ])->toArray();
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

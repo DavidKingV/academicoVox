@@ -15,7 +15,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class InstitutionResource extends Resource
 {
@@ -23,7 +22,22 @@ class InstitutionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
-    protected static string|UnitEnum|null $navigationGroup = 'People';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Institution');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Institutions');
+    }
 
     public static function form(Schema $schema): Schema
     {

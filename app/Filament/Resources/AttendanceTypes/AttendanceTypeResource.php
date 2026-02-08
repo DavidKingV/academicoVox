@@ -18,7 +18,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class AttendanceTypeResource extends Resource
 {
@@ -28,7 +27,22 @@ class AttendanceTypeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
 
-    protected static string|UnitEnum|null $navigationGroup = 'HR';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('HR');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Attendance Type');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Attendance Types');
+    }
 
     public static function form(Schema $schema): Schema
     {

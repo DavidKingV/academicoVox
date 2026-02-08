@@ -18,7 +18,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class EnrollmentResource extends Resource
 {
@@ -26,9 +25,22 @@ class EnrollmentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Enrollment');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Enrollments');
+    }
 
     public static function form(Schema $schema): Schema
     {

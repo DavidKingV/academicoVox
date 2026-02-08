@@ -7,13 +7,10 @@ use App\Models\Course;
 use App\Models\Period;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class AttendanceForCourseReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 10;
 
@@ -111,6 +108,11 @@ class AttendanceForCourseReport extends Page
             'labels' => $labels,
             'datasets' => $datasets,
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

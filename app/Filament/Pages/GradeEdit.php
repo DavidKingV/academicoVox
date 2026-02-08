@@ -9,13 +9,10 @@ use App\Models\Period;
 use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class GradeEdit extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-pencil-square';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Evaluations';
 
     protected static ?int $navigationSort = 1;
 
@@ -153,6 +150,11 @@ class GradeEdit extends Page
             ->title(__('Grade saved'))
             ->duration(1500)
             ->send();
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Evaluations');
     }
 
     public static function getNavigationLabel(): string

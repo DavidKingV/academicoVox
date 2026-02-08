@@ -17,7 +17,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class LeadTypeResource extends Resource
 {
@@ -27,7 +26,22 @@ class LeadTypeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFunnel;
 
-    protected static string|UnitEnum|null $navigationGroup = 'People';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Lead Type');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Lead Types');
+    }
 
     public static function form(Schema $schema): Schema
     {

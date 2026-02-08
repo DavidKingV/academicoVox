@@ -15,7 +15,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class CouponResource extends Resource
 {
@@ -23,7 +22,22 @@ class CouponResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Finance';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Coupon');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Coupons');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -1,30 +1,11 @@
 <x-filament-panels::page>
     <div class="flex flex-wrap items-end gap-4 mb-6">
         <div>
-            <label for="period" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Period') }}</label>
-            <select wire:model.live="selectedPeriodId" id="period" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm">
-                @foreach(\App\Models\Period::all() as $period)
-                    <option value="{{ $period->id }}">{{ $period->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
             <label for="teacher" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Teacher') }}</label>
             <select wire:model.live="selectedTeacherId" id="teacher" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm">
                 <option value="">{{ __('Select a teacher...') }}</option>
                 @foreach($teachers as $teacher)
                     <option value="{{ $teacher['id'] }}">{{ $teacher['name'] }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label for="room" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Room') }}</label>
-            <select wire:model.live="selectedRoomId" id="room" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm">
-                <option value="">{{ __('Select a room...') }}</option>
-                @foreach($rooms as $room)
-                    <option value="{{ $room['id'] }}">{{ $room['name'] }}</option>
                 @endforeach
             </select>
         </div>
@@ -70,10 +51,9 @@
                             },
                             events: mapEvents(events),
                             eventDidMount: function(info) {
-                                const teacher = info.event.extendedProps.teacher;
                                 const room = info.event.extendedProps.room;
-                                if (teacher || room) {
-                                    info.el.title = info.event.title + '\n' + [teacher, room].filter(Boolean).join(' · ');
+                                if (room) {
+                                    info.el.title = info.event.title + '\n' + room;
                                 }
                             },
                             slotMinTime: '07:00:00',
@@ -84,14 +64,14 @@
                         });
                         calendar.render();
 
-                        Livewire.on('eventsUpdated', (data) => {
+                        Livewire.on('eventsUpdated', ({ events }) => {
                             calendar.removeAllEvents();
-                            calendar.addEventSource(mapEvents(data[0].events));
+                            calendar.addEventSource(mapEvents(events));
                         });
                     });
                 };
 
-                if (window.FullCalendar) { initFn(); } else { initFn(); }
+                initFn();
             "
         ></div>
     </x-filament::section>

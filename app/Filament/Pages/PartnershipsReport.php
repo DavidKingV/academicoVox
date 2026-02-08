@@ -5,13 +5,10 @@ namespace App\Filament\Pages;
 use App\Models\Partner;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class PartnershipsReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 9;
 
@@ -33,6 +30,11 @@ class PartnershipsReport extends Page
                 'auto_renewal' => $partner->auto_renewal,
                 'courses_count' => $partner->courses_count,
             ])->toArray();
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

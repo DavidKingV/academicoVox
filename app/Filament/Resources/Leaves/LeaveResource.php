@@ -21,7 +21,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class LeaveResource extends Resource
 {
@@ -29,7 +28,20 @@ class LeaveResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static string|UnitEnum|null $navigationGroup = 'HR';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('HR');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Leave');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Leaves');
+    }
 
     public static function form(Schema $schema): Schema
     {

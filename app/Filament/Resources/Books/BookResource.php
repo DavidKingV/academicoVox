@@ -15,7 +15,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class BookResource extends Resource
 {
@@ -23,7 +22,22 @@ class BookResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Finance';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Book');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Books');
+    }
 
     public static function form(Schema $schema): Schema
     {

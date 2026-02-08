@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class GradeTypeCategoryResource extends Resource
 {
@@ -26,11 +25,22 @@ class GradeTypeCategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
 
-    protected static ?string $modelLabel = 'Grade Type Category';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
 
-    protected static ?string $pluralModelLabel = 'Grade Type Categories';
+    public static function getModelLabel(): string
+    {
+        return __('Grade Type Category');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Grade Type Categories');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -14,7 +14,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 /**
  * Read-only resource to monitor enrollment results.
@@ -26,11 +25,14 @@ class ResultResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
-
     protected static ?int $navigationSort = 6;
 
     protected static ?string $slug = 'results';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
 
     public static function getModelLabel(): string
     {

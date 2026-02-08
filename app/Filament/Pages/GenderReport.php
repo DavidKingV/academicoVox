@@ -7,13 +7,10 @@ use App\Models\Period;
 use App\Services\StatService;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class GenderReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 4;
 
@@ -155,6 +152,11 @@ class GenderReport extends Page
                 ],
             ],
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

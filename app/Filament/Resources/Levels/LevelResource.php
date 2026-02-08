@@ -22,7 +22,6 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use UnitEnum;
 
 class LevelResource extends Resource
 {
@@ -30,7 +29,20 @@ class LevelResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Level');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Levels');
+    }
 
     public static function form(Schema $schema): Schema
     {

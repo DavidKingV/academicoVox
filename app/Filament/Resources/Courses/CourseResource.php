@@ -28,7 +28,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class CourseResource extends Resource
 {
@@ -36,9 +35,22 @@ class CourseResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Course');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Courses');
+    }
 
     public static function form(Schema $schema): Schema
     {

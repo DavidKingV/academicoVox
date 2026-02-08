@@ -6,13 +6,10 @@ use App\Models\Period;
 use App\Models\Teacher;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class HrDashboard extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clock';
-
-    protected static string|UnitEnum|null $navigationGroup = 'HR';
 
     protected static ?int $navigationSort = 10;
 
@@ -33,8 +30,8 @@ class HrDashboard extends Page
         $this->selectedPeriodId = $period?->id;
 
         if ($period) {
-            $this->startDate = $period->start?->format('Y-m-d') ?? now()->startOfMonth()->format('Y-m-d');
-            $this->endDate = $period->end?->format('Y-m-d') ?? now()->endOfMonth()->format('Y-m-d');
+            $this->startDate = $period->start ?? now()->startOfMonth()->format('Y-m-d');
+            $this->endDate = $period->end ?? now()->endOfMonth()->format('Y-m-d');
         }
 
         $this->loadData();
@@ -45,8 +42,8 @@ class HrDashboard extends Page
         $period = Period::find($this->selectedPeriodId);
 
         if ($period) {
-            $this->startDate = $period->start?->format('Y-m-d');
-            $this->endDate = $period->end?->format('Y-m-d');
+            $this->startDate = $period->start;
+            $this->endDate = $period->end;
         }
 
         $this->loadData();
@@ -94,6 +91,11 @@ class HrDashboard extends Page
         }
 
         $this->teacherHours = $data;
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('HR');
     }
 
     public static function getNavigationLabel(): string

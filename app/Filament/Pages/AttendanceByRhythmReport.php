@@ -8,13 +8,10 @@ use App\Models\Period;
 use App\Models\Rhythm;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class AttendanceByRhythmReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bars-3-bottom-right';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 12;
 
@@ -109,6 +106,11 @@ class AttendanceByRhythmReport extends Page
             'labels' => $labels,
             'datasets' => array_values($datasets),
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

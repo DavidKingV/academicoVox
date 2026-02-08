@@ -8,13 +8,10 @@ use App\Models\Year;
 use App\Services\StatService;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class InternalReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 1;
 
@@ -163,6 +160,11 @@ class InternalReport extends Page
                 ],
             ],
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

@@ -18,7 +18,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class PartnerResource extends Resource
 {
@@ -26,9 +25,12 @@ class PartnerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
-
     protected static ?int $navigationSort = 8;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
 
     public static function getModelLabel(): string
     {

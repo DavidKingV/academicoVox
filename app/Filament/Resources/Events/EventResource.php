@@ -21,7 +21,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class EventResource extends Resource
 {
@@ -29,9 +28,22 @@ class EventResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
-
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Event');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Events');
+    }
 
     public static function form(Schema $schema): Schema
     {

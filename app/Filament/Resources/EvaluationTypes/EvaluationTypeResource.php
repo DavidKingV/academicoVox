@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class EvaluationTypeResource extends Resource
 {
@@ -24,7 +23,22 @@ class EvaluationTypeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Evaluation Type');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Evaluation Types');
+    }
 
     public static function form(Schema $schema): Schema
     {

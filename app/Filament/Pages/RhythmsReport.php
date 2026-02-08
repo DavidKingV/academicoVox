@@ -5,13 +5,10 @@ namespace App\Filament\Pages;
 use App\Models\Period;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class RhythmsReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-musical-note';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 5;
 
@@ -86,6 +83,11 @@ class RhythmsReport extends Page
                 ],
             ],
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

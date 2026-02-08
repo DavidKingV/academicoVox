@@ -23,7 +23,6 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use UnitEnum;
 
 class RoomResource extends Resource
 {
@@ -31,7 +30,22 @@ class RoomResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Logistics';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Logistics');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Room');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Rooms');
+    }
 
     public static function form(Schema $schema): Schema
     {

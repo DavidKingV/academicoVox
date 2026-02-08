@@ -20,7 +20,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class PeriodResource extends Resource
 {
@@ -28,7 +27,20 @@ class PeriodResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Period');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Periods');
+    }
 
     public static function form(Schema $schema): Schema
     {

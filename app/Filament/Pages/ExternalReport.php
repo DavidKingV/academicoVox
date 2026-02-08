@@ -9,13 +9,10 @@ use App\Models\Year;
 use App\Services\StatService;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class ExternalReport extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 7;
 
@@ -212,6 +209,11 @@ class ExternalReport extends Page
                 ],
             ],
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Reports');
     }
 
     public static function getNavigationLabel(): string

@@ -10,13 +10,10 @@ use App\Models\Skills\SkillScale;
 use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class SkillEvaluationPage extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-star';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Evaluations';
 
     protected static ?int $navigationSort = 2;
 
@@ -172,6 +169,11 @@ class SkillEvaluationPage extends Page
             ->title(__('Skill evaluation saved'))
             ->duration(1500)
             ->send();
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Evaluations');
     }
 
     public static function getNavigationLabel(): string

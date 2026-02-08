@@ -1,99 +1,3 @@
-Scan config, migrations, JS
-
-Read [](file:///Users/thomas/Code/academico/config/academico.php)
-
-Read [](file:///Users/thomas/Code/academico/config/registration.php)
-
-Read [](file:///Users/thomas/Code/academico/config/lms.php)
-
-Read [](file:///Users/thomas/Code/academico/config/invoicing.php)
-
-Read [](file:///Users/thomas/Code/academico/config/invoices.php)
-
-Read [](file:///Users/thomas/Code/academico/config/certificates-generation.php)
-
-Read [](file:///Users/thomas/Code/academico/config/enrollment-sheet.php)
-
-Read [](file:///Users/thomas/Code/academico/config/mailing-system.php)
-
-Read [](file:///Users/thomas/Code/academico/config/settings.php)
-
-Read [](file:///Users/thomas/Code/academico/database/migrations)
-
-Read [](file:///Users/thomas/Code/academico/database/seeders)
-
-Read [](file:///Users/thomas/Code/academico/database/factories)
-
-Searched for files matching `**/academico/resources/js/**`, 20 matches
-
-Searched for files matching `**/academico/resources/js/**/*.{js,vue}`, 41 matches
-
-Let me also check the current state of the new project: 
-
-Check academico-filament state
-
-Searched for files matching `**/academico-filament/app/**`, 4 matches
-
-Read [](file:///Users/thomas/Code/academico-filament/composer.json)
-
-Read [](file:///Users/thomas/Code/academico-filament/routes/web.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/database/migrations)
-
-Read [](file:///Users/thomas/Code/academico-filament/database/factories)
-
-Read [](file:///Users/thomas/Code/academico-filament/database/seeders)
-
-Read [](file:///Users/thomas/Code/academico-filament/config/app.php#1-1), lines 1 to 50
-
-Read [](file:///Users/thomas/Code/academico-filament/bootstrap/app.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/bootstrap/providers.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/resources/views)
-
-Read [](file:///Users/thomas/Code/academico-filament/resources/js)
-
-Read [](file:///Users/thomas/Code/academico-filament/package.json)
-
-Read [](file:///Users/thomas/Code/academico-filament/app/Http/Controllers/Controller.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/app/Models/User.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/app/Providers/Filament/AdminPanelProvider.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/app/Providers/AppServiceProvider.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/config/app.php#50-50), lines 50 to 127
-
-Read [](file:///Users/thomas/Code/academico-filament/database/factories/UserFactory.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/database/seeders/DatabaseSeeder.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/tests/TestCase.php)
-
-Read [](file:///Users/thomas/Code/academico-filament/tests/Feature)
-
-Read [](file:///Users/thomas/Code/academico-filament/tests/Unit)
-
-Read [](file:///Users/thomas/Code/academico-filament/vite.config.js)
-
-Read [](file:///Users/thomas/Code/academico-filament/phpunit.xml)
-
-Read [](file:///Users/thomas/Code/academico-filament/resources/js/app.js)
-
-Read [](file:///Users/thomas/Code/academico-filament/resources/js/bootstrap.js)
-
-Read [](file:///Users/thomas/Code/academico-filament/resources/css/app.css)
-
-Read [](file:///Users/thomas/Code/academico-filament/Dockerfile#1-1), lines 1 to 30
-
-Read [](file:///Users/thomas/Code/academico-filament/docker-compose.yml#1-1), lines 1 to 50
-
-Now I have a comprehensive understanding of both projects. Let me present the migration plan.
-
----
-
 ## Plan: Academico Backpack → Filament Migration
 
 This is a large-scale rewrite of an academic management system (language school) from Laravel + Backpack CRUD to Laravel 12 + Filament v5. The old project has ~48 Eloquent models, ~28 CRUD controllers, ~22 standard controllers, 21 events, 18 listeners, 14 services, 116 Blade views, and 41 Vue components. The new project is a greenfield Laravel 12 + Filament v5 app with nothing beyond the scaffold.
@@ -268,7 +172,13 @@ These need to be installed in the new project:
 
 ---
 
+### IMPORTANT NOTE
+
+We want to run both the old project (academico) and the new project (academico-filament) on the same database for some time. So the database structure cannot change. Users will be invited to use the new app as soon as possible but access to the old app will remain open for a few months until they grow accustomed to the new UI. So things must not break if some users make changes in the old app while other users make changes in the new app. Scheduled tasks will be disabled in the old app to avoid duplicating alerts and emails.
+
 ### Recommended Implementation Order
+
+Completed:
 
 **Phase 1 — Foundation (copy & adapt)**
 1. Copy all models (remove `CrudTrait`), migrations, factories, seeders
@@ -300,6 +210,9 @@ These need to be installed in the new project:
 21. Calendar pages (teacher, room, overview)
 22. Report pages (internal, external, attendance, courses, rhythms, levels, gender, HR)
 
+
+Still todo:
+
 **Phase 5 — Invoicing & Checkout**
 23. `InvoiceResource` with invoice detail management
 24. `PaymentResource` and `ScheduledPaymentResource`
@@ -318,24 +231,7 @@ These need to be installed in the new project:
 33. Locale/language switching
 34. ForceUpdate profile completion flow
 35. Email notifications integration
-36. LMS sync integration
 37. External mailing system integration
 38. Scheduled commands (partnership alerts, monthly reports, attendance reminders)
-39. Comprehensive test suite
-
----
-
-### Effort Estimate
-
-| Category | Item Count | Effort |
-|---|---|---|
-| Copy & adapt (models, migrations, etc.) | ~200 files | Low — mostly copy-paste with minor edits |
-| Simple Filament Resources | ~18 | Low — straightforward CRUD |
-| Complex Filament Resources | ~7 | Medium — significant form/table config |
-| Custom Filament Pages | ~15 | High — attendance, grading, calendars, reports |
-| Vue → Livewire rewrites | ~41 components | High — complete reimplementation |
-| Cart/Checkout wizard | 1 complex flow | High |
-| Public registration flow | 1 complex flow | Medium-High |
-| Multi-panel setup (admin/teacher/student) | 3 panels | Medium |
-
-The **foundation + simple resources** can move quickly (~1–2 weeks). The **complex resources** add another ~2 weeks. The **custom pages** (attendance, grading, calendars, reports, checkout) represent the bulk of the work (~4–6 weeks) since they require reimplementing Vue interactive components in Livewire/Filament.
+39. `filament/spatie-laravel-media-library-plugin` for `StudentResource` photo upload. But we want to preserve existing functionality for the old code.
+40. Comprehensive test coverage beyond model tests.

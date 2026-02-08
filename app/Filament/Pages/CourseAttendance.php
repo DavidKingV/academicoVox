@@ -6,13 +6,10 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use BackedEnum;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class CourseAttendance extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-table-cells';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Attendance';
 
     protected static ?int $navigationSort = 2;
 
@@ -89,6 +86,11 @@ class CourseAttendance extends Page
         }
 
         $this->students = $studentsData;
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Attendance');
     }
 
     public static function getNavigationLabel(): string

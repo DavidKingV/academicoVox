@@ -8,13 +8,10 @@ use App\Models\Event;
 use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use UnitEnum;
 
 class EventAttendance extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-hand-raised';
-
-    protected static string|UnitEnum|null $navigationGroup = 'Attendance';
 
     protected static ?int $navigationSort = 3;
 
@@ -104,6 +101,11 @@ class EventAttendance extends Page
             ->title(__('Attendance updated'))
             ->duration(1500)
             ->send();
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Attendance');
     }
 
     public static function getNavigationLabel(): string

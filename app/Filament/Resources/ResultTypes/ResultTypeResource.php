@@ -17,7 +17,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class ResultTypeResource extends Resource
 {
@@ -27,7 +26,22 @@ class ResultTypeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Result Type');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Result Types');
+    }
 
     public static function form(Schema $schema): Schema
     {

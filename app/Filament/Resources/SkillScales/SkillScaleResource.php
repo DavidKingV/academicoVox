@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class SkillScaleResource extends Resource
 {
@@ -26,7 +25,22 @@ class SkillScaleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedScale;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Academic';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Academic');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Skill Scale');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Skill Scales');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -26,7 +26,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class StudentResource extends Resource
 {
@@ -34,9 +33,22 @@ class StudentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|UnitEnum|null $navigationGroup = 'People';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Student');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Students');
+    }
 
     public static function form(Schema $schema): Schema
     {

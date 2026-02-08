@@ -22,7 +22,6 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use UnitEnum;
 
 class ScholarshipResource extends Resource
 {
@@ -30,7 +29,22 @@ class ScholarshipResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Finance';
+    protected static ?string $cluster = \App\Filament\Clusters\Settings\SettingsCluster::class;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Scholarship');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Scholarships');
+    }
 
     public static function form(Schema $schema): Schema
     {
