@@ -81,3 +81,13 @@ docker-compose exec app php artisan migrate
 ```
 
 6. Access the application at `http://localhost:8080`
+
+## Custom Login Page
+
+The Docker setup includes an optional custom login page. This is configured via a Docker volume mount in `docker-compose.yml`:
+
+```yaml
+- /path/to/custom-views/login.blade.php:/app/resources/views/filament/auth/login.blade.php
+```
+
+The custom login class (`App\Filament\Auth\Login`) detects at runtime whether this Blade file is present. When the file exists (i.e. in Docker), it renders the custom layour. When absent, the standard Filament login page is shown.
