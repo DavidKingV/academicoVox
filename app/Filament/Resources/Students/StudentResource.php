@@ -57,7 +57,7 @@ class StudentResource extends Resource
                 Tabs::make('Student')
                     ->columnSpanFull()
                     ->tabs([
-                        Tab::make('Student Info')
+                        Tab::make(__('Student Info'))
                             ->schema([
                                 TextInput::make('firstname')
                                     ->label(__('First name'))
@@ -68,6 +68,7 @@ class StudentResource extends Resource
                                     ->required()
                                     ->maxLength(30),
                                 TextInput::make('email')
+                                    ->label(__('Email'))
                                     ->email()
                                     ->nullable()
                                     ->maxLength(60),
@@ -75,6 +76,7 @@ class StudentResource extends Resource
                                     ->label(__('ID Number'))
                                     ->nullable(),
                                 DatePicker::make('birthdate')
+                                    ->label(__('Birthdate'))
                                     ->nullable(),
                                 Radio::make('gender_id')
                                     ->label(__('Gender'))
@@ -87,11 +89,13 @@ class StudentResource extends Resource
                                     ->default(0)
                                     ->inline(),
                                 SpatieMediaLibraryFileUpload::make('profile_picture')
+                                    ->label(__('Profile Picture'))
                                     ->collection('profile-picture')
                                     ->conversion('thumb')
                                     ->image()
                                     ->nullable(),
                                 Select::make('profession_id')
+                                    ->label(__('Profession'))
                                     ->relationship('profession', 'name')
                                     ->preload()
                                     ->searchable()
@@ -100,6 +104,7 @@ class StudentResource extends Resource
                                     ])
                                     ->nullable(),
                                 Select::make('institution_id')
+                                    ->label(__('Institution'))
                                     ->relationship('institution', 'name')
                                     ->preload()
                                     ->searchable()
@@ -119,26 +124,31 @@ class StudentResource extends Resource
                                     ->reorderable(false),
                             ]),
 
-                        Tab::make('Address')
+                        Tab::make(__('Address'))
                             ->schema([
                                 TextInput::make('address')
+                                    ->label(__('Address'))
                                     ->nullable()
                                     ->maxLength(60),
                                 TextInput::make('zip_code')
+                                    ->label(__('zip'))
                                     ->nullable()
                                     ->maxLength(10),
                                 TextInput::make('city')
+                                    ->label(__('City'))
                                     ->nullable()
                                     ->maxLength(30),
                                 TextInput::make('state')
+                                    ->label(__('State'))
                                     ->nullable()
                                     ->maxLength(30),
                                 TextInput::make('country')
+                                    ->label(__('Country'))
                                     ->nullable()
                                     ->maxLength(20),
                             ]),
 
-                        Tab::make('Invoicing Info')
+                        Tab::make(__('Invoicing Info'))
                             ->schema([
                                 TextInput::make('iban')
                                     ->label(__('IBAN'))

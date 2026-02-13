@@ -19,10 +19,12 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -63,23 +65,27 @@ class CourseResource extends Resource
                 Tabs::make('Course')
                     ->columnSpanFull()
                     ->tabs([
-                        Tab::make('Course Info')
+                        Tab::make(__('Course info'))
                             ->schema([
                                 Select::make('rhythm_id')
+                                    ->label(__('Rhythm'))
                                     ->relationship('rhythm', 'name')
                                     ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('level_id')
+                                    ->label(__('Level'))
                                     ->relationship('level', 'name')
                                     ->preload()
                                     ->searchable()
                                     ->nullable(),
                                 TextInput::make('name')
+                                    ->label(__('Name'))
                                     ->required()
                                     ->minLength(1)
                                     ->maxLength(100),
                                 TextInput::make('price')
+                                    ->label(__('Price'))
                                     ->required()
                                     ->numeric()
                                     ->minValue(0)
@@ -103,6 +109,7 @@ class CourseResource extends Resource
                                     ->suffix(config('academico.currency_position') === 'after' ? config('academico.currency_symbol') : null)
                                     ->visible(fn (): bool => (bool) config('invoicing.price_categories_enabled')),
                                 TextInput::make('volume')
+                                    ->label(__('Volume'))
                                     ->numeric()
                                     ->minValue(0)
                                     ->suffix('h')
@@ -114,37 +121,43 @@ class CourseResource extends Resource
                                     ->suffix('h')
                                     ->nullable(),
                                 TextInput::make('spots')
+                                    ->label(__('Spots'))
                                     ->required()
                                     ->integer()
                                     ->minValue(0),
                                 Checkbox::make('exempt_attendance')
                                     ->label(__('Exempt from attendance')),
                                 ColorPicker::make('color')
+                                    ->label(__('Color'))
                                     ->nullable(),
                             ]),
 
-                        Tab::make('Resources')
+                        Tab::make(__('Resources'))
                             ->schema([
                                 Select::make('teacher_id')
+                                    ->label(__('Teacher'))
                                     ->relationship('teacher', 'id')
                                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),
                                 Select::make('room_id')
+                                    ->label(__('Room'))
                                     ->relationship('room', 'name')
                                     ->preload()
                                     ->nullable(),
                             ]),
 
-                        Tab::make('Pedagogy')
+                        Tab::make(__('Pedagogy'))
                             ->schema([
                                 Select::make('books')
+                                    ->label(__('Books'))
                                     ->relationship('books', 'name')
                                     ->multiple()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('evaluation_type_id')
+                                    ->label(__('Evaluation Type'))
                                     ->relationship('evaluationType', 'name')
                                     ->preload()
                                     ->nullable(),
@@ -153,17 +166,23 @@ class CourseResource extends Resource
                                     ->visibleOn('edit'),
                             ]),
 
-                        Tab::make('Schedule')
+                        Tab::make(__('Schedule'))
                             ->schema([
+                                TextEntry::make(__('Please be aware that if you modify the course dates, the existing attendance for this course will be lost!'))
+                                    ->columnSpanFull()
+                                    ->visibleOn('edit'),
                                 Select::make('period_id')
+                                    ->label(__('Period'))
                                     ->relationship('period', 'name')
                                     ->default(fn (): ?int => Period::get_default_period()?->id)
                                     ->required()
                                     ->preload()
                                     ->searchable(),
                                 DatePicker::make('start_date')
+                                    ->label(__('Start Date'))
                                     ->required(),
                                 DatePicker::make('end_date')
+                                    ->label(__('End Date'))
                                     ->required(),
                                 Repeater::make('courseTimes')
                                     ->relationship('times')
@@ -202,13 +221,22 @@ class CourseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('rhythm.name')
+                    ->label(__('Rhythm'))
                     ->sortable(),
                 TextColumn::make('level.name')
+                    ->label(__('Level'))
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('volume')
+                    ->label(__('Volume'))
+                    ->suffix('h')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('remote_volume')
+                    ->label(__('Remote volume'))
                     ->suffix('h')
                     ->sortable()
                     ->toggleable(),
@@ -217,6 +245,7 @@ class CourseResource extends Resource
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('room.name')
+                    ->label(__('Room'))
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('course_times')
@@ -227,16 +256,18 @@ class CourseResource extends Resource
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('start_date')
+                    ->label(__('Start Date'))
                     ->date()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('end_date')
+                    ->label(__('End Date'))
                     ->date()
                     ->sortable()
                     ->toggleable(),
                 IconColumn::make('marked')
                     ->boolean()
-                    ->label(__('Eval'))
+                    ->label(__('Evaluation complete'))
                     ->toggleable(),
             ])
             ->filters([

@@ -44,6 +44,7 @@ class TaxResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(40)
@@ -63,9 +64,11 @@ class TaxResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('value')
+                    ->label(__('Value'))
                     ->suffix('%')
                     ->sortable(),
             ])

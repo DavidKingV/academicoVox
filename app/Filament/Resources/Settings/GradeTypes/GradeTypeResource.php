@@ -51,13 +51,13 @@ class GradeTypeResource extends Resource
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('total')
+                    ->label(__('Total'))
                     ->required()
                     ->integer()
                     ->minValue(0),
                 Select::make('grade_type_category_id')
                     ->label(__('Category'))
                     ->relationship('category', 'name')
-                    ->label(__('Category'))
                     ->searchable()
                     ->preload(),
             ]);

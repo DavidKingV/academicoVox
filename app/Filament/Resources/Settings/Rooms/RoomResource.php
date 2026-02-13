@@ -56,6 +56,7 @@ class RoomResource extends Resource
                     ->relationship('campus', 'name')
                     ->required(),
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(40)
@@ -71,6 +72,7 @@ class RoomResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('campus.name')
+                    ->label(__('Campus'))
                     ->sortable(),
                 TextColumn::make('name')
                     ->label(__('Name'))

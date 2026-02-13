@@ -44,15 +44,18 @@ class SkillScaleResource extends Resource
         return $schema
             ->components([
                 TextInput::make('shortname')
+                    ->label(__('Abbreviation'))
                     ->required()
                     ->maxLength(8)
                     ->unique(table: 'skill_scales', ignoreRecord: true),
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(40)
                     ->unique(ignoreRecord: true),
                 TextInput::make('value')
+                    ->label(__('Value'))
                     ->required()
                     ->numeric()
                     ->minValue(0)
@@ -66,12 +69,15 @@ class SkillScaleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('shortname')
+                    ->label(__('Abbreviation'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('value')
+                    ->label(__('Value'))
                     ->sortable(),
             ])
             ->filters([

@@ -44,11 +44,13 @@ class PaymentmethodResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('code')
+                    ->label(__('Code'))
                     ->required()
                     ->unique(ignoreRecord: true),
             ]);
@@ -59,9 +61,11 @@ class PaymentmethodResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('code')
+                    ->label(__('Code'))
                     ->searchable(),
             ])
             ->filters([

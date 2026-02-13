@@ -50,16 +50,19 @@ class LeaveResource extends Resource
         return $schema
             ->components([
                 Select::make('teacher_id')
+                    ->label(__('Teacher'))
                     ->relationship('teacher', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->required()
                     ->preload()
                     ->searchable(),
                 Select::make('leave_type_id')
+                    ->label(__('Leave Type'))
                     ->relationship('leaveType', 'name')
                     ->required()
                     ->preload(),
                 DatePicker::make('date')
+                    ->label(__('Date'))
                     ->required(),
             ]);
     }
@@ -81,6 +84,7 @@ class LeaveResource extends Resource
                     ->label(__('Type'))
                     ->sortable(),
                 TextColumn::make('date')
+                    ->label(__('Date'))
                     ->date()
                     ->sortable(),
             ])

@@ -45,16 +45,19 @@ class EvaluationTypeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 Select::make('gradeTypes')
+                    ->label(__('Grade Types'))
                     ->relationship('gradeTypes', 'name')
                     ->multiple()
                     ->preload()
                     ->searchable(),
                 Select::make('skills')
+                    ->label(__('Skills'))
                     ->relationship('skills', 'name')
                     ->multiple()
                     ->preload()
@@ -67,6 +70,7 @@ class EvaluationTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
             ])

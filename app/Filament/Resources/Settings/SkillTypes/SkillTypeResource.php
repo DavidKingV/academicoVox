@@ -44,11 +44,13 @@ class SkillTypeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('shortname')
+                    ->label(__('Abbreviation'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(8)
                     ->unique(ignoreRecord: true),
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(90)
@@ -61,9 +63,11 @@ class SkillTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('shortname')
+                    ->label(__('Abbreviation'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
             ])

@@ -44,11 +44,13 @@ class CouponResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('value')
+                    ->label(__('Value'))
                     ->required()
                     ->numeric()
                     ->minValue(0),
@@ -60,9 +62,11 @@ class CouponResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('value')
+                    ->label(__('Value'))
                     ->sortable(),
             ])
             ->filters([

@@ -77,7 +77,8 @@ class RhythmResource extends Resource
                 TextColumn::make('default_volume')
                     ->label(__('Default Volume'))
                     ->sortable(),
-                TextColumn::make('product_code'),
+                TextColumn::make('product_code')
+                    ->label(__('Product Code')),
             ])
             ->filters([
                 TrashedFilter::make(),

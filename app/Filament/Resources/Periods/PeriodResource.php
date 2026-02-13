@@ -52,6 +52,7 @@ class PeriodResource extends Resource
         return $schema
             ->components([
                 Select::make('year_id')
+                    ->label(__('Year'))
                     ->relationship('year', 'name')
                     ->required()
                     ->preload()
@@ -83,6 +84,7 @@ class PeriodResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('year.name')
+                    ->label(__('Year'))
                     ->sortable(),
                 TextColumn::make('name')
                     ->label(__('Name'))
@@ -97,6 +99,7 @@ class PeriodResource extends Resource
                     ->date()
                     ->sortable(),
                 IconColumn::make('archived')
+                    ->label(__('Archived'))
                     ->boolean(),
             ])
             ->filters([

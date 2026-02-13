@@ -44,6 +44,7 @@ class LeaveTypeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required(),
             ]);
     }
@@ -53,6 +54,7 @@ class LeaveTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
             ])

@@ -44,11 +44,13 @@ class BookResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('price')
+                    ->label(__('Price'))
                     ->required()
                     ->numeric()
                     ->minValue(0)
@@ -56,6 +58,7 @@ class BookResource extends Resource
                     ->prefix(config('academico.currency_position') === 'before' ? config('academico.currency_symbol') : null)
                     ->suffix(config('academico.currency_position') === 'after' ? config('academico.currency_symbol') : null),
                 TextInput::make('product_code')
+                    ->label(__('Product Code'))
                     ->nullable(),
             ]);
     }
@@ -65,11 +68,13 @@ class BookResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price_with_currency')
                     ->label(__('Price')),
-                TextColumn::make('product_code'),
+                TextColumn::make('product_code')
+                    ->label(__('Product Code')),
             ])
             ->filters([
                 //

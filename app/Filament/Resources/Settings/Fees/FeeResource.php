@@ -46,11 +46,13 @@ class FeeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('price')
+                    ->label(__('Price'))
                     ->required()
                     ->numeric()
                     ->minValue(0)
@@ -58,6 +60,7 @@ class FeeResource extends Resource
                     ->prefix(config('academico.currency_position') === 'before' ? config('academico.currency_symbol') : null)
                     ->suffix(config('academico.currency_position') === 'after' ? config('academico.currency_symbol') : null),
                 TextInput::make('product_code')
+                    ->label(__('Product Code'))
                     ->nullable(),
                 Checkbox::make('default')
                     ->label(__('Add automatically to every order')),
@@ -69,12 +72,15 @@ class FeeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price')
+                    ->label(__('Price'))
                     ->money(config('academico.currency_code', 'USD'))
                     ->sortable(),
-                TextColumn::make('product_code'),
+                TextColumn::make('product_code')
+                    ->label(__('Product Code')),
                 IconColumn::make('default')
                     ->boolean()
                     ->label(__('Auto-add')),

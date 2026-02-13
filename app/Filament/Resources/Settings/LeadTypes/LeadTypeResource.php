@@ -45,10 +45,13 @@ class LeadTypeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required(),
                 Textarea::make('description')
+                    ->label(__('Description'))
                     ->nullable(),
                 TextInput::make('icon')
+                    ->label(__('Icon'))
                     ->nullable(),
             ]);
     }
@@ -58,11 +61,14 @@ class LeadTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('description')
+                    ->label(__('Description'))
                     ->limit(50),
-                TextColumn::make('icon'),
+                TextColumn::make('icon')
+                    ->label(__('Icon')),
             ])
             ->filters([
                 //

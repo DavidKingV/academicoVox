@@ -50,27 +50,33 @@ class EventResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(255),
                 Select::make('course_id')
+                    ->label(__('Course'))
                     ->relationship('course', 'name')
                     ->preload()
                     ->searchable()
                     ->nullable(),
                 Select::make('teacher_id')
+                    ->label(__('Teacher'))
                     ->relationship('teacher', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->preload()
                     ->searchable()
                     ->nullable(),
                 Select::make('room_id')
+                    ->label(__('Room'))
                     ->relationship('room', 'name')
                     ->preload()
                     ->nullable(),
                 DateTimePicker::make('start')
+                    ->label(__('Start'))
                     ->required(),
                 DateTimePicker::make('end')
+                    ->label(__('End'))
                     ->required(),
             ]);
     }
@@ -80,6 +86,7 @@ class EventResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('course.name')
@@ -96,9 +103,11 @@ class EventResource extends Resource
                     ->label(__('Room'))
                     ->sortable(),
                 TextColumn::make('start')
+                    ->label(__('Start'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('end')
+                    ->label(__('End'))
                     ->dateTime()
                     ->sortable(),
             ])

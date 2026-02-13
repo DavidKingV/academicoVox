@@ -45,11 +45,13 @@ class ResultTypeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->minLength(1)
                     ->maxLength(40)
                     ->unique(ignoreRecord: true),
                 Textarea::make('description')
+                    ->label(__('Description'))
                     ->maxLength(255)
                     ->nullable(),
             ]);
@@ -60,9 +62,11 @@ class ResultTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('description')
+                    ->label(__('Description'))
                     ->limit(50),
             ])
             ->filters([

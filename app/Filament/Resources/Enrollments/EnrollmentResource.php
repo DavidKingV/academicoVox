@@ -47,6 +47,7 @@ class EnrollmentResource extends Resource
         return $schema
             ->components([
                 Select::make('course_id')
+                    ->label(__('Course'))
                     ->relationship('course', 'name')
                     ->required()
                     ->preload()
@@ -59,10 +60,12 @@ class EnrollmentResource extends Resource
                     ->prefix(config('academico.currency_position') === 'before' ? config('academico.currency_symbol') : null)
                     ->suffix(config('academico.currency_position') === 'after' ? config('academico.currency_symbol') : null),
                 Select::make('status_id')
+                    ->label(__('Status'))
                     ->relationship('enrollmentStatus', 'name')
                     ->required()
                     ->preload(),
                 Select::make('scholarships')
+                    ->label(__('Scholarships'))
                     ->relationship('scholarships', 'name')
                     ->multiple()
                     ->preload()
@@ -77,6 +80,7 @@ class EnrollmentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
+                    ->label(__('ID'))
                     ->sortable(),
                 TextColumn::make('student.user.lastname')
                     ->label(__('Last name'))

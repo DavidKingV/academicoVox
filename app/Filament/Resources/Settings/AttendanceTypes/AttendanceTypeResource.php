@@ -46,8 +46,10 @@ class AttendanceTypeResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required(),
                 ColorPicker::make('color')
+                    ->label(__('Color'))
                     ->nullable(),
             ]);
     }
@@ -57,9 +59,11 @@ class AttendanceTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
-                ColorColumn::make('color'),
+                ColorColumn::make('color')
+                    ->label(__('Color')),
             ])
             ->filters([
                 //
