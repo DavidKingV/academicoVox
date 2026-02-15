@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Period;
 use App\Models\Teacher;
 use BackedEnum;
+use Carbon\Carbon;
 use Filament\Pages\Page;
 
 class TeacherDashboard extends Page
@@ -75,7 +76,7 @@ class TeacherDashboard extends Page
                 'id' => $event->id,
                 'name' => $event->name,
                 'course_name' => $event->course?->name ?? '-',
-                'start' => $event->start?->format('d/m/Y H:i'),
+                'start' => $event->start ? Carbon::parse($event->start)->format('d/m/Y H:i') : null,
             ];
         })->toArray();
 

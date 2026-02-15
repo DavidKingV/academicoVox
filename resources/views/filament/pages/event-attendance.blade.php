@@ -12,11 +12,11 @@
             @if(count($students) > 0)
                 <div class="space-y-3">
                     @foreach($students as $student)
-                        <div class="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800">
+                        <div class="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                             <span class="text-sm font-medium text-gray-900 dark:text-white">
                                 {{ $student['studentName'] }}
                             </span>
-                            <div class="flex gap-1">
+                            <div class="flex flex-wrap gap-1">
                                 @foreach($attendanceTypes as $type)
                                     @php
                                         $isActive = $student['currentTypeId'] === $type['id'];

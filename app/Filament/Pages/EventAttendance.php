@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\AttendanceType;
 use App\Models\Event;
 use BackedEnum;
+use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
@@ -29,11 +30,11 @@ class EventAttendance extends Page
     /** @var array<int, array<string, mixed>> */
     public array $students = [];
 
-    public function mount(?int $eventId = null): void
+    public function mount(): void
     {
-        $this->eventId = $eventId;
+        $this->eventId = request()->integer('eventId') ?: null;
 
-        if ($eventId) {
+        if ($this->eventId) {
             $this->loadData();
         }
     }
@@ -119,7 +120,7 @@ class EventAttendance extends Page
     public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
     {
         return $this->event
-            ? __('Attendance').': '.($this->event->name ?? $this->event->start?->format('d/m/Y'))
+            ? __('Attendance').': '.($this->event->name ?? ($this->event->start ? Carbon::parse($this->event->start)->format('d/m/Y') : ''))
             : __('Event Attendance');
     }
 }

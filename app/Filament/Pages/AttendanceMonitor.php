@@ -50,7 +50,10 @@ class AttendanceMonitor extends Page
         $this->absencesPerStudent = Attendance::with(['student', 'event', 'event.course'])
             ->whereIn('event_id', $eventsIds)
             ->whereIn('attendance_type_id', [3, 4])
+            ->orderBy('id')
             ->get()
+            ->groupBy(fn ($att) => $att->student_id.'-'.$att->event_id)
+            ->map->first()
             ->groupBy('student_id')
             ->map(fn ($items) => [
                 'studentName' => $items->first()->student->name ?? '',

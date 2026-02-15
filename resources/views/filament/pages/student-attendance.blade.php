@@ -34,12 +34,12 @@
             <div class="space-y-3">
 
                 @foreach($events as $event)
-                    <div class="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800">
-                        <div class="flex-1 min-w-0">
+                    <div class="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                        <div class="min-w-0">
                             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $event['name'] }}</span>
                             <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">{{ $event['date'] }}</span>
                         </div>
-                        <div class="flex gap-1">
+                        <div class="flex flex-wrap gap-1">
                             @foreach($attendanceTypes as $type)
                                 @php
                                     $isActive = $event['currentTypeId'] === $type['id'];
