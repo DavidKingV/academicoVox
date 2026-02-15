@@ -48,13 +48,16 @@ class EventAttendance extends Page
 
         $this->attendanceTypes = AttendanceType::all()
             ->map(fn ($type) => [
-                'id' => $type->id,
+                'id' => (int) $type->id,
                 'name' => $type->name,
+                'color' => $type->class ?? 'gray',
             ])
             ->toArray();
 
         $existingAttendance = Attendance::where('event_id', $this->eventId)
+            ->orderBy('id')
             ->get()
+            ->unique('student_id')
             ->keyBy('student_id');
 
         $enrollments = $this->event->course?->enrollments ?? collect();
@@ -65,7 +68,7 @@ class EventAttendance extends Page
             $studentsData[] = [
                 'studentId' => $enrollment->student_id,
                 'studentName' => $enrollment->student?->name ?? '',
-                'currentTypeId' => $att?->attendance_type_id,
+                'currentTypeId' => $att ? (int) $att->attendance_type_id : null,
             ];
         }
 

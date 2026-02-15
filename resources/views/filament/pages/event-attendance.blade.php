@@ -20,17 +20,10 @@
                                 @foreach($attendanceTypes as $type)
                                     @php
                                         $isActive = $student['currentTypeId'] === $type['id'];
-                                        $color = match($type['id']) {
-                                            1 => 'success',
-                                            2 => 'info',
-                                            3 => 'warning',
-                                            4 => 'danger',
-                                            default => 'gray',
-                                        };
                                     @endphp
                                     <x-filament::button
                                         wire:click="toggleAttendance({{ $student['studentId'] }}, {{ $type['id'] }})"
-                                        :color="$isActive ? $color : 'gray'"
+                                        :color="$isActive ? $type['color'] : 'gray'"
                                         :outlined="!$isActive"
                                         size="xs"
                                     >

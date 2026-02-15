@@ -57,6 +57,7 @@ class AttendanceMonitor extends Page
                 'absencesCount' => $items->count(),
                 'courseName' => $items->first()->event->course?->name ?? '',
                 'studentId' => $items->first()->student_id,
+                'courseId' => $items->first()->event->course?->id,
             ])
             ->sortByDesc('absencesCount')
             ->values()

@@ -26,7 +26,11 @@
                         <tbody>
                             @foreach($absencesPerStudent as $record)
                                 <tr class="border-b dark:border-gray-600">
-                                    <td class="px-4 py-2">{{ $record['studentName'] }}</td>
+                                    <td class="px-4 py-2">
+                                        <a href="{{ route('filament.admin.pages.student-attendance', ['studentId' => $record['studentId'], 'courseId' => $record['courseId']]) }}" class="text-primary-600 hover:underline">
+                                            {{ $record['studentName'] }}
+                                        </a>
+                                    </td>
                                     <td class="px-4 py-2">{{ $record['courseName'] }}</td>
                                     <td class="px-4 py-2 text-right">
                                         <x-filament::badge color="danger">{{ $record['absencesCount'] }}</x-filament::badge>

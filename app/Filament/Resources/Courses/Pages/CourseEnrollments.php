@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Courses\Pages;
 
+use App\Filament\Pages\StudentAttendance;
 use App\Filament\Resources\Courses\CourseResource;
 use App\Filament\Resources\Enrollments\EnrollmentResource;
 use App\Filament\Resources\Students\StudentResource;
@@ -93,7 +94,7 @@ class CourseEnrollments extends Page implements HasTable
             ])
             ->defaultSort('id', 'desc')
             ->recordUrl(fn ($record) => auth()->user()->can('enrollments.edit')
-                ? EnrollmentResource::getUrl('edit', ['record' => $record])
+                ? EnrollmentResource::getUrl('view', ['record' => $record])
                 : StudentResource::getUrl('edit', ['record' => $record->student_id]))
             ->recordActions([
                 Action::make('view_student')
@@ -101,6 +102,10 @@ class CourseEnrollments extends Page implements HasTable
                     ->icon('heroicon-o-user')
                     ->url(fn ($record) => StudentResource::getUrl('edit', ['record' => $record->student_id]))
                     ->visible(fn () => auth()->user()->can('enrollments.edit')),
+                Action::make('view_attendance')
+                    ->label(__('Attendance'))
+                    ->icon('heroicon-o-clipboard-document-check')
+                    ->url(fn ($record) => StudentAttendance::getUrl(['studentId' => $record->student_id, 'courseId' => $record->course_id])),
             ]);
     }
 

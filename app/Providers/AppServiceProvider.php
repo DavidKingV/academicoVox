@@ -6,6 +6,8 @@ use App\Interfaces\CertificatesInterface;
 use App\Interfaces\EnrollmentSheetInterface;
 use App\Interfaces\InvoicingInterface;
 use App\Interfaces\MailingSystemInterface;
+use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,6 +49,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerGates();
+
+        Table::configureUsing(function (Table $table): Table {
+            return $table->recordActionsPosition(RecordActionsPosition::BeforeCells);
+        });
     }
 
     protected function registerGates(): void
