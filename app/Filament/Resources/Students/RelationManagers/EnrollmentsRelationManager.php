@@ -37,7 +37,7 @@ class EnrollmentsRelationManager extends RelationManager
                     ->label(__('Enrolled'))
                     ->date(),
             ])
-            ->recordUrl(fn ($record) => EnrollmentResource::getUrl('edit', ['record' => $record]))
+            ->recordUrl(fn ($record) => EnrollmentResource::getUrl('view', ['record' => $record]))
             ->headerActions([
                 Action::make('enroll')
                     ->label(__('Enroll in a course'))
