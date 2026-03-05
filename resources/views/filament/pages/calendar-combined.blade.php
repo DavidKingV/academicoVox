@@ -1,15 +1,42 @@
 <x-filament-panels::page>
     <div class="flex flex-wrap items-end gap-4 mb-6">
-        <div>
-            <label for="teacher" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Teacher') }}</label>
-            <select wire:model.live="selectedTeacherId" id="teacher" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm">
-                <option value="">{{ __('Select a teacher...') }}</option>
+        <div class="min-w-[200px]">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Teachers') }}</label>
+            <select wire:model.live="selectedTeacherIds" multiple
+                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                style="min-height: 80px;">
                 @foreach($teachers as $teacher)
                     <option value="{{ $teacher['id'] }}">{{ $teacher['name'] }}</option>
                 @endforeach
             </select>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('Hold Ctrl/Cmd to select multiple') }}</p>
+        </div>
+
+        <div class="min-w-[200px]">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Rooms') }}</label>
+            <select wire:model.live="selectedRoomIds" multiple
+                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                style="min-height: 80px;">
+                @foreach($rooms as $room)
+                    <option value="{{ $room['id'] }}">{{ $room['name'] }}</option>
+                @endforeach
+            </select>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('Hold Ctrl/Cmd to select multiple') }}</p>
         </div>
     </div>
+
+    @if(count($selectedTeacherIds) > 0)
+        <div class="flex flex-wrap gap-2 mb-4">
+            @foreach($teachers as $teacher)
+                @if(in_array($teacher['id'], $selectedTeacherIds))
+                    <span class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium text-white"
+                        style="background-color: {{ $teacherColors[$teacher['id']] ?? '#3b82f6' }}">
+                        {{ $teacher['name'] }}
+                    </span>
+                @endif
+            @endforeach
+        </div>
+    @endif
 
     <x-filament::section>
         <div
@@ -51,10 +78,12 @@
                             },
                             events: mapEvents(events),
                             eventDidMount: function(info) {
+                                const teacher = info.event.extendedProps.teacher;
                                 const room = info.event.extendedProps.room;
-                                if (room) {
-                                    info.el.title = info.event.title + '\n' + room;
-                                }
+                                let tooltip = info.event.title;
+                                if (teacher) tooltip += '\n{{ __('Teacher') }}: ' + teacher;
+                                if (room) tooltip += '\n{{ __('Room') }}: ' + room;
+                                info.el.title = tooltip;
                             },
                             slotMinTime: '07:00:00',
                             slotMaxTime: '22:00:00',

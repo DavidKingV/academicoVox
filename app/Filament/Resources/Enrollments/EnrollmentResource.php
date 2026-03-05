@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Enrollments;
 
-use App\Filament\RelationManagers\CommentsRelationManager;
+use App\Filament\Exports\EnrollmentExporter;
 use App\Filament\Resources\Courses\CourseResource;
 use App\Filament\Resources\Enrollments\Pages\ChangeEnrollmentCourse;
 use App\Filament\Resources\Enrollments\Pages\ListEnrollments;
 use App\Filament\Resources\Enrollments\Pages\ViewEnrollment;
+use App\Filament\Resources\Enrollments\RelationManagers\EnrollmentCommentsRelationManager;
 use App\Filament\Resources\Enrollments\RelationManagers\ScholarshipsRelationManager;
 use App\Filament\Resources\Students\StudentResource;
 use App\Models\Enrollment;
@@ -15,6 +16,8 @@ use BackedEnum;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
@@ -88,10 +91,25 @@ class EnrollmentResource extends Resource
                         TextEntry::make('childrenEnrollments.course.name')
                             ->label(__('Children Enrollments'))
                             ->placeholder('-'),
+                        TextEntry::make('course.teacher.name')
+                            ->label(__('Teacher'))
+                            ->placeholder('-'),
                         TextEntry::make('result.result_name.name')
                             ->label(__('Result'))
                             ->placeholder('-'),
+                        TextEntry::make('attendance_ratio')
+                            ->label(__('Attendance'))
+                            ->suffix('%')
+                            ->placeholder('-'),
                     ]),
+                Section::make(__('Books'))
+                    ->schema([
+                        TextEntry::make('course.books.name')
+                            ->label(__('Books'))
+                            ->badge()
+                            ->placeholder(__('No books assigned')),
+                    ])
+                    ->collapsible(),
             ]);
     }
 
@@ -149,6 +167,23 @@ class EnrollmentResource extends Resource
                     ->label(__('Scholarships'))
                     ->badge()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('student.idnumber')
+                    ->label(__('ID Number'))
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('student.student_age')
+                    ->label(__('Age'))
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('student.formatted_gender')
+                    ->label(__('Gender'))
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('student.birthdate')
+                    ->label(__('Birthdate'))
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('student.phone.phone_number')
+                    ->label(__('Phone'))
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('period')
@@ -191,8 +226,14 @@ class EnrollmentResource extends Resource
             ->recordActions([
                 ViewAction::make(),
             ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(EnrollmentExporter::class),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->exporter(EnrollmentExporter::class),
                     DeleteBulkAction::make(),
                 ]),
             ]);
@@ -202,7 +243,7 @@ class EnrollmentResource extends Resource
     {
         return [
             ScholarshipsRelationManager::class,
-            CommentsRelationManager::class,
+            EnrollmentCommentsRelationManager::class,
         ];
     }
 

@@ -20,7 +20,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -40,7 +40,7 @@ class TeacherResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('HR');
+        return __('Organization');
     }
 
     public static function getModelLabel(): string
@@ -95,6 +95,9 @@ class TeacherResource extends Resource
                     ->wrap()
                     ->hiddenFrom('md'),
                 // Desktop columns
+                TextColumn::make('id')
+                    ->label(__('ID Number'))
+                    ->sortable(),
                 TextColumn::make('user.lastname')
                     ->label(__('Last name'))
                     ->searchable()
@@ -123,7 +126,20 @@ class TeacherResource extends Resource
                     ->visibleFrom('md'),
             ])
             ->filters([
-                TrashedFilter::make(),
+                SelectFilter::make('status')
+                    ->label(__('Status'))
+                    ->options([
+                        'active' => __('Active'),
+                        'inactive' => __('Inactive'),
+                    ])
+                    ->default('active')
+                    ->query(function (Builder $query, array $data): Builder {
+                        return match ($data['value']) {
+                            'active' => $query->whereNull('deleted_at'),
+                            'inactive' => $query->whereNotNull('deleted_at'),
+                            default => $query->withTrashed(),
+                        };
+                    }),
             ])
             ->recordActions([
                 ActionGroup::make([
@@ -137,6 +153,14 @@ class TeacherResource extends Resource
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
             ]);
     }
 

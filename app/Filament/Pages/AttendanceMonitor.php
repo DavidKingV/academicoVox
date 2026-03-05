@@ -6,9 +6,11 @@ use App\Models\Attendance;
 use App\Models\Course;
 use App\Models\Event;
 use App\Models\Period;
+use App\Models\Teacher;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Pages\Page;
+
 
 class AttendanceMonitor extends Page
 {
@@ -25,6 +27,14 @@ class AttendanceMonitor extends Page
 
     public ?int $selectedPeriodId = null;
 
+    public ?int $selectedTeacherId = null;
+
+    public int $absencesPage = 1;
+
+    public int $coursesPage = 1;
+
+    protected int $perPage = 15;
+
     /** @var array<int, array<string, mixed>> */
     public array $absencesPerStudent = [];
 
@@ -40,7 +50,26 @@ class AttendanceMonitor extends Page
 
     public function updatedSelectedPeriodId(): void
     {
+        $this->absencesPage = 1;
+        $this->coursesPage = 1;
         $this->loadData();
+    }
+
+    public function updatedSelectedTeacherId(): void
+    {
+        $this->absencesPage = 1;
+        $this->coursesPage = 1;
+        $this->loadData();
+    }
+
+    public function goToAbsencesPage(int $page): void
+    {
+        $this->absencesPage = $page;
+    }
+
+    public function goToCoursesPage(int $page): void
+    {
+        $this->coursesPage = $page;
     }
 
     protected function loadData(): void
@@ -49,7 +78,14 @@ class AttendanceMonitor extends Page
             return;
         }
 
-        $coursesIds = Course::where('period_id', $this->selectedPeriodId)->pluck('id');
+        $coursesQuery = Course::where('period_id', $this->selectedPeriodId);
+
+        if ($this->selectedTeacherId) {
+            $coursesQuery->where('teacher_id', $this->selectedTeacherId);
+        }
+
+        $coursesIds = $coursesQuery->pluck('id');
+
         $eventsIds = Event::whereIn('course_id', $coursesIds)->pluck('id');
 
         $this->absencesPerStudent = Attendance::with(['student', 'event', 'event.course'])
@@ -71,11 +107,16 @@ class AttendanceMonitor extends Page
             ->values()
             ->toArray();
 
-        $courses = Course::with(['events', 'enrollments', 'attendance'])
+        $coursesListQuery = Course::with(['events', 'enrollments', 'attendance'])
             ->where('period_id', $this->selectedPeriodId)
             ->whereHas('events')
-            ->whereHas('enrollments')
-            ->get();
+            ->whereHas('enrollments');
+
+        if ($this->selectedTeacherId) {
+            $coursesListQuery->where('teacher_id', $this->selectedTeacherId);
+        }
+
+        $courses = $coursesListQuery->get();
 
         $coursesdata = [];
         foreach ($courses as $course) {
@@ -124,5 +165,20 @@ class AttendanceMonitor extends Page
     public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
     {
         return __('Attendance Monitor');
+    }
+
+    /** @return array<string, mixed> */
+    protected function getViewData(): array
+    {
+        $absencesCollection = collect($this->absencesPerStudent);
+        $coursesCollection = collect($this->coursesData);
+
+        return [
+            'teachers' => Teacher::with('user')->get()->sortBy('name'),
+            'paginatedAbsences' => $absencesCollection->forPage($this->absencesPage, $this->perPage)->values(),
+            'absencesTotalPages' => (int) ceil($absencesCollection->count() / $this->perPage),
+            'paginatedCourses' => $coursesCollection->forPage($this->coursesPage, $this->perPage)->values(),
+            'coursesTotalPages' => (int) ceil($coursesCollection->count() / $this->perPage),
+        ];
     }
 }

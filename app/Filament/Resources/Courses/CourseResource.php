@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Courses;
 
+use App\Filament\Exports\CourseExporter;
+use App\Filament\Pages\GradeEdit;
+use App\Filament\Pages\SkillEvaluationPage;
 use App\Filament\Resources\Courses\Pages\CourseBlockView;
 use App\Filament\Resources\Courses\Pages\CourseEnrollments;
 use App\Filament\Resources\Courses\Pages\CreateCourse;
@@ -16,6 +19,8 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
@@ -32,6 +37,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class CourseResource extends Resource
@@ -169,6 +175,48 @@ class CourseResource extends Resource
                                     ->label(__('Evaluation ready'))
                                     ->visibleOn('edit'),
                             ]),
+
+                        Tab::make(__('Sub-levels'))
+                            ->schema([
+                                Repeater::make('children')
+                                    ->relationship()
+                                    ->label(__('Children courses'))
+                                    ->schema([
+                                        TextInput::make('name')
+                                            ->label(__('Name'))
+                                            ->required()
+                                            ->maxLength(100),
+                                        Select::make('level_id')
+                                            ->label(__('Level'))
+                                            ->relationship('level', 'name')
+                                            ->preload()
+                                            ->searchable()
+                                            ->nullable(),
+                                        TextInput::make('volume')
+                                            ->label(__('Volume'))
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->suffix('h')
+                                            ->nullable(),
+                                    ])
+                                    ->columns(3)
+                                    ->defaultItems(0)
+                                    ->reorderable(false)
+                                    ->mutateRelationshipDataBeforeCreateUsing(function (array $data, $livewire): array {
+                                        $parent = $livewire->getRecord();
+                                        $data['period_id'] = $parent->period_id;
+                                        $data['teacher_id'] = $parent->teacher_id;
+                                        $data['room_id'] = $parent->room_id;
+                                        $data['start_date'] = $parent->start_date;
+                                        $data['end_date'] = $parent->end_date;
+                                        $data['price'] = $parent->price;
+                                        $data['rhythm_id'] = $parent->rhythm_id;
+                                        $data['spots'] = $parent->spots;
+
+                                        return $data;
+                                    }),
+                            ])
+                            ->visibleOn('edit'),
 
                         Tab::make(__('Schedule'))
                             ->schema([
@@ -310,6 +358,11 @@ class CourseResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->visibleFrom('lg'),
+                IconColumn::make('parent_course_id')
+                    ->label('')
+                    ->icon(fn ($state) => $state ? 'heroicon-o-arrow-uturn-left' : null)
+                    ->tooltip(__('Child course'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('marked')
                     ->boolean()
                     ->label(__('Evaluation complete'))
@@ -336,6 +389,12 @@ class CourseResource extends Resource
                     ->relationship('level', 'name')
                     ->label(__('Level'))
                     ->preload(),
+                TernaryFilter::make('hide_children')
+                    ->label(__('Hide Children Courses'))
+                    ->queries(
+                        true: fn ($query) => $query->whereNull('parent_course_id'),
+                        false: fn ($query) => $query->whereNotNull('parent_course_id'),
+                    ),
             ])
             ->defaultSort('start_date', 'desc')
             ->recordActions([
@@ -345,11 +404,27 @@ class CourseResource extends Resource
                         ->label(__('View Enrollments'))
                         ->icon('heroicon-o-academic-cap')
                         ->url(fn ($record) => static::getUrl('enrollments', ['record' => $record])),
+                    Action::make('evaluate_skills')
+                        ->label(__('Evaluate Skills'))
+                        ->icon('heroicon-o-star')
+                        ->url(fn ($record) => SkillEvaluationPage::getUrl(['courseId' => $record->id]))
+                        ->visible(fn ($record) => $record->evaluationType?->skills()?->count() > 0 && $record->enrollments()->count() > 0),
+                    Action::make('manage_grades')
+                        ->label(__('Manage Grades'))
+                        ->icon('heroicon-o-pencil-square')
+                        ->url(fn ($record) => GradeEdit::getUrl(['courseId' => $record->id]))
+                        ->visible(fn ($record) => $record->evaluationType?->gradeTypes()?->count() > 0 && $record->enrollments()->count() > 0),
                     DeleteAction::make(),
                 ]),
             ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(CourseExporter::class),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->exporter(CourseExporter::class),
                     DeleteBulkAction::make(),
                 ]),
             ]);
