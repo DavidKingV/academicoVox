@@ -63,23 +63,40 @@ class PaymentResource extends Resource
     {
         return $table
             ->columns([
+                // Mobile: stacked payment info
+                TextColumn::make('mobile_payment')
+                    ->label(__('Payment'))
+                    ->state(fn ($record) => $record->enrollment_name)
+                    ->description(fn ($record) => collect([$record->month, $record->paymentmethod?->name])->filter()->implode(' · '))
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('invoice', fn ($q) => $q->where('client_name', 'like', "%{$search}%")))
+                    ->wrap()
+                    ->hiddenFrom('md'),
+                // Desktop columns
                 TextColumn::make('month')
                     ->label(__('Month'))
-                    ->sortable('date'),
+                    ->sortable('date')
+                    ->visibleFrom('md'),
                 TextColumn::make('enrollment_name')
                     ->label(__('Student'))
+                    ->wrap()
+                    ->width('160px')
                     ->searchable(query: function (Builder $query, string $search): Builder {
                         return $query->whereHas('invoice', fn ($q) => $q->where('client_name', 'like', "%{$search}%"));
-                    }),
+                    })
+                    ->visibleFrom('md'),
                 TextColumn::make('paymentmethod.name')
-                    ->label(__('Payment Method')),
+                    ->label(__('Payment Method'))
+                    ->visibleFrom('md'),
                 TextColumn::make('value')
                     ->label(__('Amount'))
                     ->money(config('academico.currency_code', 'USD'))
                     ->sortable(),
                 TextColumn::make('comment')
                     ->label(__('Comment'))
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->wrap()
+                    ->width('200px')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('md'),
             ])
             ->defaultSort('date', 'desc')
             ->filters([

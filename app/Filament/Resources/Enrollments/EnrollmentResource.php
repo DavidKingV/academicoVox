@@ -98,22 +98,35 @@ class EnrollmentResource extends Resource
             ->columns([
                 TextColumn::make('id')
                     ->label(__('ID'))
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('md'),
                 TextColumn::make('student.user.lastname')
                     ->label(__('Last name'))
                     ->searchable()
-                    ->sortable(),
-                TextColumn::make('student.user.firstname')
-                    ->label(__('First name'))
-                    ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->weight('bold')
+                    ->description(fn (Enrollment $record) => $record->student?->user?->firstname)
+                    ->visibleFrom('md'),
+                // Mobile: stacked student + course info
+                TextColumn::make('mobile_student')
+                    ->label(__('Student'))
+                    ->state(fn (Enrollment $record) => $record->student?->user?->lastname.' '.$record->student?->user?->firstname)
+                    ->weight('bold')
+                    ->description(fn (Enrollment $record) => $record->course?->name)
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('student.user', fn ($q) => $q->where('lastname', 'like', "%{$search}%")->orWhere('firstname', 'like', "%{$search}%")))
+                    ->wrap()
+                    ->hiddenFrom('md'),
                 TextColumn::make('course.name')
                     ->label(__('Course'))
+                    ->wrap()
+                    ->width('200px')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('md'),
                 TextColumn::make('course.period.name')
                     ->label(__('Period'))
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('lg'),
                 TextColumn::make('enrollmentStatus.name')
                     ->label(__('Status'))
                     ->badge()
@@ -125,7 +138,8 @@ class EnrollmentResource extends Resource
                 TextColumn::make('student.user.email')
                     ->label(__('Email'))
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('md'),
                 TextColumn::make('scholarships.name')
                     ->label(__('Scholarships'))
                     ->badge()
