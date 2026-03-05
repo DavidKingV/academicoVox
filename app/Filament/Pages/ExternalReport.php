@@ -18,7 +18,8 @@ class ExternalReport extends Page
 
     public static function canAccess(): bool
     {
-        return (bool) config('settings.external_courses_enabled');
+        return (auth()->user()?->can('reports.view') ?? false)
+            && (bool) config('settings.external_courses_enabled');
     }
 
     protected string $view = 'filament.pages.external-report';

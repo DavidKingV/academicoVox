@@ -15,6 +15,11 @@ class HrDashboard extends Page
 
     protected string $view = 'filament.pages.hr-dashboard';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can('hr.view') ?? false;
+    }
+
     public ?int $selectedPeriodId = null;
 
     public ?string $startDate = null;

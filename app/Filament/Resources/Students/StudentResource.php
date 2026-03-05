@@ -34,6 +34,11 @@ class StudentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can('enrollments.view') ?? false;
+    }
+
     protected static ?int $navigationSort = 200;
 
     public static function getNavigationGroup(): ?string

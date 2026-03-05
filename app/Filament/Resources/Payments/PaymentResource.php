@@ -25,7 +25,8 @@ class PaymentResource extends Resource
 
     public static function canAccess(): bool
     {
-        return (bool) config('invoicing.accounting_enabled');
+        return (auth()->user()?->hasRole('admin') ?? false)
+            && (bool) config('invoicing.accounting_enabled');
     }
 
     public static function getNavigationGroup(): ?string

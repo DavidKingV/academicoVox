@@ -18,7 +18,8 @@ class AttendanceReport extends Page
 
     public static function canAccess(): bool
     {
-        return (bool) config('settings.attendance_reports_enabled');
+        return (auth()->user()?->can('reports.view') ?? false)
+            && (bool) config('settings.attendance_reports_enabled');
     }
 
     protected string $view = 'filament.pages.attendance-report';

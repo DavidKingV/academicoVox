@@ -37,6 +37,11 @@ class EnrollmentResource extends Resource
 
     protected static ?int $navigationSort = 210;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can('enrollments.view') ?? false;
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('Administration');
