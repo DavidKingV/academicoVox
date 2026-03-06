@@ -64,11 +64,9 @@ class DailyOverview extends Widget
     protected function loadEvents(): void
     {
         $date = Carbon::parse($this->selectedDate);
-        $period = Period::get_default_period();
 
         $events = Event::with(['course', 'teacher.user', 'room'])
             ->whereDate('start', $date)
-            ->when($period, fn ($q) => $q->whereHas('course', fn ($q2) => $q2->where('period_id', $period->id)))
             ->orderBy('start')
             ->get();
 

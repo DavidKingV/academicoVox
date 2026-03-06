@@ -53,11 +53,6 @@ class CourseResource extends Resource
         return auth()->user()?->can('courses.view') ?? false;
     }
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Courses');
-    }
-
     public static function getModelLabel(): string
     {
         return __('Course');
