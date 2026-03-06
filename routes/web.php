@@ -10,7 +10,7 @@ Route::get('/', function () {
     $user = Auth::user();
 
     if (! $user) {
-        return view('welcome');
+        return redirect()->route('login');
     }
 
     if ($user->isStudent()) {
