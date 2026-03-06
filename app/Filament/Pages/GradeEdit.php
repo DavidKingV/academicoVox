@@ -9,6 +9,7 @@ use App\Models\Period;
 use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Gate;
 
 class GradeEdit extends Page
 {
@@ -18,7 +19,9 @@ class GradeEdit extends Page
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->can('evaluation.view') ?? false;
+        $user = auth()->user();
+
+        return $user?->can('evaluation.edit') || $user?->isTeacher();
     }
 
     public static function shouldRegisterNavigation(): bool
@@ -47,7 +50,7 @@ class GradeEdit extends Page
 
         if ($courseId) {
             $course = Course::find($courseId);
-            if ($course) {
+            if ($course && Gate::allows('edit-course-grades', $course)) {
                 $this->selectedPeriodId = $course->period_id;
                 $this->loadCourses();
                 $this->selectedCourseId = $course->id;
@@ -83,12 +86,14 @@ class GradeEdit extends Page
 
         $this->courses = Course::where('period_id', $this->selectedPeriodId)
             ->whereHas('enrollments')
-            ->orderBy('name')
             ->get()
+            ->filter(fn ($course) => Gate::allows('edit-course-grades', $course))
+            ->sortBy('name')
             ->map(fn ($course) => [
                 'id' => $course->id,
                 'name' => $course->name,
             ])
+            ->values()
             ->toArray();
     }
 
@@ -100,7 +105,7 @@ class GradeEdit extends Page
 
         $course = Course::with('evaluationType.gradeTypes')->find($this->selectedCourseId);
 
-        if (! $course || ! $course->evaluationType) {
+        if (! $course || ! $course->evaluationType || Gate::denies('edit-course-grades', $course)) {
             $this->gradeTypes = [];
             $this->enrollments = [];
 
@@ -143,6 +148,12 @@ class GradeEdit extends Page
 
     public function saveGrade(int $enrollmentId, int $gradeTypeId, string $value): void
     {
+        $course = Course::find($this->selectedCourseId);
+
+        if (! $course || Gate::denies('edit-course-grades', $course)) {
+            abort(403);
+        }
+
         $numericValue = $value !== '' ? (float) $value : null;
 
         if ($numericValue === null) {
