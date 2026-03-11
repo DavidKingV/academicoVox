@@ -98,8 +98,7 @@ class TeacherBusinessLogicTest extends TestCase
 
         $hours = $teacher->plannedHoursInPeriod('2025-04-01', '2025-04-30');
 
-        // Event length may be negative due to Carbon diffInSeconds sign in newer versions
-        $this->assertEquals(4, abs($hours));
+        $this->assertEquals(4, $hours);
     }
 
     public function test_planned_hours_excludes_events_outside_range(): void
@@ -119,7 +118,7 @@ class TeacherBusinessLogicTest extends TestCase
 
         $hours = $teacher->plannedHoursInPeriod('2025-04-01', '2025-04-30');
 
-        $this->assertEquals(2, abs($hours));
+        $this->assertEquals(2, $hours);
     }
 
     public function test_planned_remote_hours_prorates_by_overlapping_weeks(): void

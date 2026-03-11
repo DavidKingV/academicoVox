@@ -129,7 +129,8 @@ class Teacher extends Model
         $total = 0;
         /** @var Course $course */
         foreach ($this->courses()->realcourses()->whereDate('start_date', '<=', $end)->get() as $course) {
-            $courseRemoteVolumePerWeek = $course->remote_volume / max(1, $course->end_date->diffInWeeks($course->start_date) + 1);
+            $totalCourseWeeks = (int) ($course->start_date->diffInDays($course->end_date) / 7) + 1;
+            $courseRemoteVolumePerWeek = $course->remote_volume / max(1, $totalCourseWeeks);
 
             // the number of days (selected period) overlapping the course length
             // latest of course and report start dates.
@@ -140,7 +141,7 @@ class Teacher extends Model
                 $endDate = Carbon::parse($course->end_date)->min($end);
 
                 // add 1 to include current week.
-                $numberOfWeeks = $startDate->diffInWeeks($endDate) + 1;
+                $numberOfWeeks = (int) ($startDate->diffInDays($endDate) / 7) + 1;
 
                 $total += $courseRemoteVolumePerWeek * $numberOfWeeks;
             }

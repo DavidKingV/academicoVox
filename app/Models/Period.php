@@ -21,6 +21,11 @@ class Period extends Model
 
     protected $fillable = ['name', 'year_id', 'start', 'end', 'archived'];
 
+    protected $casts = [
+        'start' => 'date',
+        'end' => 'date',
+    ];
+
     protected static function boot()
     {
         parent::boot();

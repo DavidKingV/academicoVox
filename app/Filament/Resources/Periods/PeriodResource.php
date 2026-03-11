@@ -91,6 +91,7 @@ class PeriodResource extends Resource
         $enrollmentPeriodId = Config::where('name', 'default_enrollment_period')->first()?->value;
 
         return $table
+            ->defaultSort('start', 'desc')
             ->columns([
                 // Mobile: stacked period info
                 TextColumn::make('mobile_period')

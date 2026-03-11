@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Period;
 use App\Models\Teacher;
 use BackedEnum;
+use Carbon\Carbon;
 use Filament\Pages\Page;
 
 class HrDashboard extends Page
@@ -26,6 +27,8 @@ class HrDashboard extends Page
 
     public ?string $endDate = null;
 
+    public bool $usesDateFilter = false;
+
     /** @var array<int, array<string, mixed>> */
     public array $teacherHours = [];
 
@@ -35,8 +38,8 @@ class HrDashboard extends Page
         $this->selectedPeriodId = $period?->id;
 
         if ($period) {
-            $this->startDate = $period->start ?? now()->startOfMonth()->format('Y-m-d');
-            $this->endDate = $period->end ?? now()->endOfMonth()->format('Y-m-d');
+            $this->startDate = $period->start ? Carbon::parse($period->start)->toDateString() : now()->startOfMonth()->toDateString();
+            $this->endDate = $period->end ? Carbon::parse($period->end)->toDateString() : now()->endOfMonth()->toDateString();
         }
 
         $this->loadData();
@@ -47,20 +50,36 @@ class HrDashboard extends Page
         $period = Period::find($this->selectedPeriodId);
 
         if ($period) {
-            $this->startDate = $period->start;
-            $this->endDate = $period->end;
+            $this->startDate = $period->start ? Carbon::parse($period->start)->toDateString() : null;
+            $this->endDate = $period->end ? Carbon::parse($period->end)->toDateString() : null;
         }
 
+        $this->usesDateFilter = false;
         $this->loadData();
     }
 
     public function updatedStartDate(): void
     {
+        $this->usesDateFilter = true;
         $this->loadData();
     }
 
     public function updatedEndDate(): void
     {
+        $this->usesDateFilter = true;
+        $this->loadData();
+    }
+
+    public function clearDateFilter(): void
+    {
+        $period = Period::find($this->selectedPeriodId);
+
+        if ($period) {
+            $this->startDate = $period->start ? Carbon::parse($period->start)->toDateString() : null;
+            $this->endDate = $period->end ? Carbon::parse($period->end)->toDateString() : null;
+        }
+
+        $this->usesDateFilter = false;
         $this->loadData();
     }
 
@@ -70,6 +89,8 @@ class HrDashboard extends Page
             return;
         }
 
+        $period = Period::find($this->selectedPeriodId);
+
         $teachers = Teacher::with('user')
             ->get()
             ->sortBy(fn ($t) => $t->user?->name);
@@ -77,8 +98,17 @@ class HrDashboard extends Page
         $data = [];
 
         foreach ($teachers as $teacher) {
-            $plannedHours = $teacher->plannedHoursInPeriod($this->startDate, $this->endDate);
-            $remoteHours = $teacher->plannedRemoteHoursInPeriod($this->startDate, $this->endDate);
+            // Theoretical volumes from course definitions (legacy "Heures prévues")
+            $theoreticalFaceToFace = $period
+                ? (float) $teacher->courses()->realcourses()->where('period_id', $period->id)->sum('volume')
+                : 0.0;
+            $theoreticalRemote = $period
+                ? (float) $teacher->courses()->realcourses()->where('period_id', $period->id)->sum('remote_volume')
+                : 0.0;
+
+            // Actual hours from scheduled events (legacy "Heures sur le calendrier")
+            $scheduledFaceToFace = $teacher->plannedHoursInPeriod($this->startDate, $this->endDate);
+            $scheduledRemote = $teacher->plannedRemoteHoursInPeriod($this->startDate, $this->endDate);
 
             $leaveDays = $teacher->leaves()
                 ->where('date', '>=', $this->startDate)
@@ -88,9 +118,11 @@ class HrDashboard extends Page
             $data[] = [
                 'teacherName' => $teacher->user?->name ?? 'Teacher #'.$teacher->id,
                 'teacherId' => $teacher->id,
-                'plannedHours' => round($plannedHours, 1),
-                'remoteHours' => round($remoteHours, 1),
-                'totalHours' => round($plannedHours + $remoteHours, 1),
+                'theoreticalFaceToFace' => round($theoreticalFaceToFace, 2),
+                'theoreticalRemote' => round($theoreticalRemote, 2),
+                'theoreticalTotal' => round($theoreticalFaceToFace + $theoreticalRemote, 2),
+                'scheduledFaceToFace' => round($scheduledFaceToFace, 2),
+                'scheduledRemote' => round($scheduledRemote, 2),
                 'leaveDays' => $leaveDays,
             ];
         }

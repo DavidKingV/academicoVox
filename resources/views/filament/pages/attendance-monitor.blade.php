@@ -11,7 +11,7 @@
         <div>
             <label for="teacher" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Teacher') }}</label>
             <select wire:model.live="selectedTeacherId" id="teacher" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm">
-                <option value="">{{ __('All Teachers') }}</option>
+                <option value="">{{ __('All teachers') }}</option>
                 @foreach($teachers as $teacher)
                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                 @endforeach

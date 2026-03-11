@@ -4,27 +4,27 @@ namespace App\Filament\Resources\Leaves\Pages;
 
 use App\Filament\Resources\Leaves\LeaveResource;
 use App\Models\Leave;
+use App\Models\Teacher;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class CreateLeave extends CreateRecord
 {
     protected static string $resource = LeaveResource::class;
 
-    protected function getFormSchema(): array
+    public function form(Schema $schema): Schema
     {
-        return [
+        return $schema->components([
             Select::make('teacher_ids')
                 ->label(__('Teachers'))
-                ->relationship('teacher', 'id')
-                ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                ->options(fn () => Teacher::with('user')->get()->pluck('name', 'id'))
                 ->multiple()
                 ->required()
-                ->preload()
                 ->searchable(),
             Select::make('leave_type_id')
                 ->relationship('leaveType', 'name')
@@ -36,14 +36,14 @@ class CreateLeave extends CreateRecord
             DatePicker::make('end_date')
                 ->label(__('End date'))
                 ->required(),
-        ];
+        ]);
     }
 
     protected function handleRecordCreation(array $data): Model
     {
         $teacherIds = $data['teacher_ids'] ?? [];
-        $startDate = Carbon::parse($data['start_date']);
-        $endDate = Carbon::parse($data['end_date']);
+        $startDate = Carbon::parse($data['start_date'] ?? null);
+        $endDate = Carbon::parse($data['end_date'] ?? null);
         $period = CarbonPeriod::create($startDate, $endDate);
 
         $lastLeave = null;
@@ -59,5 +59,10 @@ class CreateLeave extends CreateRecord
         }
 
         return $lastLeave ?? Leave::make();
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

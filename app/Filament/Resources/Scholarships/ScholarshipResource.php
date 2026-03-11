@@ -46,6 +46,11 @@ class ScholarshipResource extends Resource
         return __('Scholarships');
     }
 
+    public static function canAccess(): bool
+    {
+        return Scholarship::withTrashed()->exists();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

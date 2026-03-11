@@ -44,7 +44,7 @@ class StatsOverview extends BaseWidget
                 ->description($period->name)
                 ->icon('heroicon-o-user-plus')
                 ->color('warning')
-                ->url(StudentResource::getUrl('index', ['tableFilters' => ['new_in_period' => ['isActive' => true]]])),
+                ->url(StudentResource::getUrl('index', ['filters' => ['new_in_period' => ['period_id' => $period->id]]])),
         ];
     }
 }

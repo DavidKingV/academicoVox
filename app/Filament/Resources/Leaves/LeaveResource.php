@@ -6,6 +6,7 @@ use App\Filament\Resources\Leaves\Pages\CreateLeave;
 use App\Filament\Resources\Leaves\Pages\EditLeave;
 use App\Filament\Resources\Leaves\Pages\ListLeaves;
 use App\Models\Leave;
+use App\Models\Teacher;
 use BackedEnum;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -96,11 +97,9 @@ class LeaveResource extends Resource
             ->defaultSort('date', 'desc')
             ->filters([
                 SelectFilter::make('teacher_id')
-                    ->relationship('teacher', 'id')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->label(__('Teacher'))
-                    ->searchable()
-                    ->preload(),
+                    ->options(fn () => Teacher::with('user')->get()->pluck('name', 'id'))
+                    ->searchable(),
                 Filter::make('date_range')
                     ->form([
                         DatePicker::make('from'),

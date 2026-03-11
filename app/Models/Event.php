@@ -110,7 +110,7 @@ class Event extends Model
 
     public function getLengthAttribute()
     {
-        return Carbon::parse($this->end)->diffInSeconds(Carbon::parse($this->start)) / 3600;
+        return Carbon::parse($this->start)->diffInSeconds(Carbon::parse($this->end)) / 3600;
     }
 
     public function getVolumeAttribute()
@@ -140,7 +140,7 @@ class Event extends Model
 
     public function getEventLengthAttribute()
     {
-        return round(Carbon::parse($this->end)->diffInMinutes(Carbon::parse($this->start)) / 60, 2);
+        return round(Carbon::parse($this->start)->diffInMinutes(Carbon::parse($this->end)) / 60, 2);
     }
 
     public function getShortDateAttribute()
