@@ -146,8 +146,8 @@ class EventResource extends Resource
             ->filters([
                 Filter::make('date_range')
                     ->form([
-                        \Filament\Forms\Components\DatePicker::make('from'),
-                        \Filament\Forms\Components\DatePicker::make('until'),
+                        \Filament\Forms\Components\DatePicker::make('from')->label(__('From')),
+                        \Filament\Forms\Components\DatePicker::make('until')->label(__('Until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

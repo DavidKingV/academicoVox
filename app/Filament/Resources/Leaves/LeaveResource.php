@@ -102,8 +102,8 @@ class LeaveResource extends Resource
                     ->searchable(),
                 Filter::make('date_range')
                     ->form([
-                        DatePicker::make('from'),
-                        DatePicker::make('until'),
+                        DatePicker::make('from')->label(__('From')),
+                        DatePicker::make('until')->label(__('Until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

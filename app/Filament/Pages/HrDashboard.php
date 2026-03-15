@@ -116,7 +116,7 @@ class HrDashboard extends Page
                 ->count();
 
             $data[] = [
-                'teacherName' => $teacher->user?->name ?? 'Teacher #'.$teacher->id,
+                'teacherName' => $teacher->user?->name ?? __('Teacher').' #'.$teacher->id,
                 'teacherId' => $teacher->id,
                 'theoreticalFaceToFace' => round($theoreticalFaceToFace, 2),
                 'theoreticalRemote' => round($theoreticalRemote, 2),

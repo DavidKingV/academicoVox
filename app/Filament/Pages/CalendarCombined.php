@@ -44,7 +44,7 @@ class CalendarCombined extends Page
             ->get()
             ->map(fn ($t) => [
                 'id' => $t->id,
-                'name' => $t->user?->name ?? 'Teacher #'.$t->id,
+                'name' => $t->user?->name ?? __('Teacher').' #'.$t->id,
             ])
             ->sortBy('name')
             ->values()
@@ -109,7 +109,7 @@ class CalendarCombined extends Page
             ->unique('id')
             ->map(fn ($event) => [
                 'id' => $event->id,
-                'title' => $event->course?->name ?? $event->name ?? 'Event',
+                'title' => $event->course?->name ?? $event->name ?? __('Event'),
                 'start' => $event->start,
                 'end' => $event->end,
                 'color' => $this->teacherColors[$event->teacher_id] ?? ($event->course?->color ?? '#3b82f6'),

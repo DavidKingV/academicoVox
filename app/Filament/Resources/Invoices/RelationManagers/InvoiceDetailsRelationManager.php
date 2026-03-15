@@ -15,7 +15,10 @@ class InvoiceDetailsRelationManager extends RelationManager
 {
     protected static string $relationship = 'invoiceDetails';
 
-    protected static ?string $title = 'Products';
+    public static function getTitle(mixed $ownerRecord, string $pageClass): string
+    {
+        return __('Products');
+    }
 
     public function table(Table $table): Table
     {

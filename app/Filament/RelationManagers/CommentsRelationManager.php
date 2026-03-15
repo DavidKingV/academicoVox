@@ -16,8 +16,6 @@ class CommentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'comments';
 
-    protected static ?string $title = 'Comments';
-
     public function isReadOnly(): bool
     {
         return false;

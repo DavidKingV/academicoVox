@@ -18,7 +18,10 @@ class PaymentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'payments';
 
-    protected static ?string $title = 'Payments';
+    public static function getTitle(mixed $ownerRecord, string $pageClass): string
+    {
+        return __('Payments');
+    }
 
     public function table(Table $table): Table
     {
