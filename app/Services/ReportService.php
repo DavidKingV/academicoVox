@@ -57,6 +57,9 @@ class ReportService
                             $takings += $data_period->takings;
                             $avg_takings += $data_period->takings / max(1, $taughtHoursCount);
                         }
+
+                        unset($stats);
+                        gc_collect_cycles();
                     }
 
                     $year = $data_period->year;

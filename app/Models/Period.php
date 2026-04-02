@@ -130,10 +130,10 @@ class Period extends Model
     public function getAcquisitionRateAttribute()
     {
         // get students enrolled in period P-1
-        $previous_period_student_ids = $this->previousPeriod()->real_enrollments->pluck('student_id');
+        $previous_period_student_ids = $this->previousPeriod()->real_enrollments()->pluck('enrollments.student_id');
 
         // and students enrolled in period P
-        $current_students_ids = $this->real_enrollments->pluck('student_id');
+        $current_students_ids = $this->real_enrollments()->pluck('enrollments.student_id');
 
         // students both in period p-1 and period p
         $acquired_students = $previous_period_student_ids->intersect($current_students_ids);
@@ -146,8 +146,11 @@ class Period extends Model
         // get students IDs enrolled in all previous periods
         $previous_period_student_ids = DB::table('enrollments')->join('courses', 'enrollments.course_id', 'courses.id')->where('period_id', '<', $this->id)->pluck('enrollments.student_id');
 
-        // and students enrolled in period P
-        $current_students_ids = $this->real_enrollments->unique('student_id');
+        // and students enrolled in period P (without eager loading heavy relationships)
+        $current_students_ids = $this->real_enrollments()
+            ->without(['student', 'course', 'childrenEnrollments'])
+            ->get()
+            ->unique('student_id');
 
         // students in period P who have never been enrolled in previous periods
         return $current_students_ids->whereNotIn('student_id', $previous_period_student_ids);
@@ -155,7 +158,10 @@ class Period extends Model
 
     public function getTakingsAttribute()
     {
-        return $this->real_enrollments->sum('total_paid_price');
+        return $this->real_enrollments()
+            ->without(['student', 'course', 'childrenEnrollments'])
+            ->get()
+            ->sum('total_paid_price');
     }
 
     /** TODO this method can be furthered optimized and refactored */

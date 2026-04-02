@@ -62,26 +62,25 @@ class StatService
 
     public function taughtHoursCount(): int
     {
-        return $this->coursesQuery->whereNull('parent_course_id')->get()->sum('total_volume');
+        return (int) $this->coursesQuery->whereNull('parent_course_id')->sum(DB::raw('volume + remote_volume'));
     }
 
     public function soldHoursCount(): int
     {
-        $total = 0;
-
         if ($this->external) {
-            foreach ($this->coursesQuery->get() as $course) {
-                $total += $course->total_volume * $course->head_count;
-            }
-
-            return $total;
+            return (int) $this->coursesQuery->sum(DB::raw('(volume + remote_volume) * head_count'));
         }
 
-        foreach ($this->coursesQuery->withCount('real_enrollments')->get() as $course) {
-            $total += $course->total_volume * $course->real_enrollments_count;
+        $courseIds = $this->coursesQuery->pluck('courses.id');
+
+        if ($courseIds->isEmpty()) {
+            return 0;
         }
 
-        return $total;
+        return (int) DB::table('courses')
+            ->leftJoin(DB::raw('(SELECT course_id, COUNT(*) as cnt FROM enrollments WHERE status_id IN (1, 2) AND parent_id IS NULL GROUP BY course_id) as ec'), 'courses.id', '=', 'ec.course_id')
+            ->whereIn('courses.id', $courseIds)
+            ->sum(DB::raw('(courses.volume + courses.remote_volume) * COALESCE(ec.cnt, 0)'));
     }
 
     public function newStudentsCount(): int
@@ -209,37 +208,33 @@ class StatService
 
     private function getPendingEnrollmentsCountForPeriod(Period $period): int
     {
-        return $period->enrollments->where('status_id', 1)->where('parent_id', null)->count();
+        return $period->enrollments()->where('status_id', 1)->whereNull('parent_id')->count();
     }
 
-    private function getPendingEnrollmentsCountForYear(Year $year)
+    private function getPendingEnrollmentsCountForYear(Year $year): int
     {
-        $total = 0;
-
-        foreach ($year->periods as $period) {
-            $total += $this->getPendingEnrollmentsCountForPeriod($period);
-        }
-
-        return $total;
+        return DB::table('enrollments')
+            ->join('courses', 'enrollments.course_id', '=', 'courses.id')
+            ->join('periods', 'courses.period_id', '=', 'periods.id')
+            ->where('periods.year_id', $year->id)
+            ->where('enrollments.status_id', 1)
+            ->whereNull('enrollments.parent_id')
+            ->count();
     }
 
     private function getPaidEnrollmentsCountForPeriod(Period $period): int
     {
-        return $period
-            ->enrollments
-            ->where('status_id', 2) // paid
-            ->where('parent_id', null)
-            ->count();
+        return $period->enrollments()->where('status_id', 2)->whereNull('parent_id')->count();
     }
 
-    private function getPaidEnrollmentsCountForYear(Year $year)
+    private function getPaidEnrollmentsCountForYear(Year $year): int
     {
-        $total = 0;
-
-        foreach ($year->periods as $period) {
-            $total += $this->getPaidEnrollmentsCountForPeriod($period);
-        }
-
-        return $total;
+        return DB::table('enrollments')
+            ->join('courses', 'enrollments.course_id', '=', 'courses.id')
+            ->join('periods', 'courses.period_id', '=', 'periods.id')
+            ->where('periods.year_id', $year->id)
+            ->where('enrollments.status_id', 2)
+            ->whereNull('enrollments.parent_id')
+            ->count();
     }
 }
