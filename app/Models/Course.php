@@ -265,8 +265,6 @@ class Course extends Model
      */
     public function getCourseTimesAttribute()
     {
-        $parsedCourseTimes = [];
-        // TODO localize these
         $daysInitials = [
             __('Sun'),
             __('Mon'),
@@ -284,28 +282,67 @@ class Course extends Model
             $courseTimes = $this->children->first()->times;
         }
 
-        if ($courseTimes) {
-            foreach ($courseTimes as $courseTime) {
-                $initial = $daysInitials[$courseTime->day];
+        if (! $courseTimes) {
+            return '';
+        }
 
-                if (! isset($parsedCourseTimes[$initial])) {
-                    $parsedCourseTimes[$initial] = [];
+        // Group by time slot, keeping track of day indices
+        $timeSlotDays = [];
+        foreach ($courseTimes as $courseTime) {
+            $timeSlot = sprintf(
+                '%s - %s',
+                Carbon::parse($courseTime->start)->locale(App::getLocale())->isoFormat('LT'),
+                Carbon::parse($courseTime->end)->locale(App::getLocale())->isoFormat('LT')
+            );
+
+            $timeSlotDays[$timeSlot][] = $courseTime->day;
+        }
+
+        $parts = [];
+        foreach ($timeSlotDays as $timeSlot => $days) {
+            $days = array_values(array_unique($days));
+            sort($days);
+
+            $dayLabel = $this->formatDayRange($days, $daysInitials);
+            $parts[] = $dayLabel.' '.$timeSlot;
+        }
+
+        return implode(' | ', $parts);
+    }
+
+    private function formatDayRange(array $days, array $daysInitials): string
+    {
+        if (count($days) === 1) {
+            return $daysInitials[$days[0]];
+        }
+
+        // Split into consecutive runs
+        $runs = [];
+        $currentRun = [$days[0]];
+
+        for ($i = 1; $i < count($days); $i++) {
+            if ($days[$i] === $days[$i - 1] + 1) {
+                $currentRun[] = $days[$i];
+            } else {
+                $runs[] = $currentRun;
+                $currentRun = [$days[$i]];
+            }
+        }
+        $runs[] = $currentRun;
+
+        // Format each run: ranges for 3+ consecutive days, commas otherwise
+        $formatted = [];
+        foreach ($runs as $run) {
+            if (count($run) >= 3) {
+                $formatted[] = $daysInitials[$run[0]].'-'.$daysInitials[end($run)];
+            } else {
+                foreach ($run as $day) {
+                    $formatted[] = $daysInitials[$day];
                 }
-
-                $parsedCourseTimes[$initial][] = sprintf(
-                    '%s - %s',
-                    Carbon::parse($courseTime->start)->locale(App::getLocale())->isoFormat('LT'),
-                    Carbon::parse($courseTime->end)->locale(App::getLocale())->isoFormat('LT')
-                );
             }
         }
 
-        $result = '';
-        foreach ($parsedCourseTimes as $day => $times) {
-            $result .= $day.' '.implode(' / ', $times).' | ';
-        }
-
-        return trim($result, ' | ');
+        return implode(', ', $formatted);
     }
 
     public function getCoursePeriodNameAttribute()
