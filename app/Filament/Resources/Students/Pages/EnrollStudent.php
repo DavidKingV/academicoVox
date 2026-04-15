@@ -115,6 +115,7 @@ class EnrollStudent extends Page implements HasTable
                         Enrollment::create([
                             'student_id' => $this->getRecord()->id,
                             'course_id' => $record->id,
+                            'responsible_id' => auth()->id(),
                             'status_id' => 1,
                             'total_price' => $record->price,
                         ]);
