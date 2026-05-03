@@ -159,7 +159,7 @@ class CheckoutPage extends Page
                 $this->enrollment = $sp->enrollment;
 
                 $products[] = [
-                    'product_name' => __('Scheduled Payment').' - '.$sp->date,
+                    'product_name' => __('Scheduled Payment').' - '.$sp->date?->format('Y-m-d'),
                     'product_code' => '',
                     'product_type' => ScheduledPayment::class,
                     'product_id' => $sp->id,

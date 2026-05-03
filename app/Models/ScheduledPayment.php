@@ -22,6 +22,10 @@ class ScheduledPayment extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logUnguarded();
@@ -90,7 +94,7 @@ class ScheduledPayment extends Model
 
     public function identifiableAttribute()
     {
-        return $this->date.' ('.$this->value_with_currency.')';
+        return $this->date?->format('Y-m-d').' ('.$this->value_with_currency.')';
     }
 
     public function getStatusTypeNameAttribute()
