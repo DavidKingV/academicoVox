@@ -168,12 +168,12 @@ class Teacher extends Model
                     $query->where('exempt_attendance', '!=', 1);
                     $query->orWhereNull('exempt_attendance');
                 }))
-            ->with('course')
+            ->with(['course.enrollments', 'attendance'])
             ->where('start', '<', Carbon::now(config('settings.courses_timezone'))->addMinutes(20)->toDateTimeString())
             ->get();
 
         foreach ($eventsWithExpectedAttendance as $event) {
-            foreach ($event->enrollments as $enrollment) {
+            foreach ($event->course->enrollments as $enrollment) {
                 // if a student has no attendance record for the class (event)
                 $hasNotAttended = $event->attendance->where('student_id', $enrollment->student_id)->isEmpty();
 
