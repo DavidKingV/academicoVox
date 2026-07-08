@@ -278,6 +278,40 @@ class RegistrationWizard extends Component
         }
     }
 
+    protected function rules(): array
+    {
+        return [
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => array_values(array_filter([
+                'required',
+                'email',
+                'max:255',
+                $this->checkEmailUnicity ? 'unique:users,email' : null,
+            ])),
+            'password' => ['required', 'confirmed', Password::min(6)],
+            'gender' => 'required|in:0,1,2',
+            'idnumber' => 'required|max:12',
+            'birthdate' => 'required|date',
+            'address' => 'required|max:255',
+            'phonenumbers' => 'required|array|min:1',
+            'phonenumbers.*' => 'required|string|max:30',
+            'profession' => 'nullable|max:255',
+            'institution' => 'nullable|max:255',
+            'photo' => $this->pictureMandatory ? 'required|image|max:5120' : 'nullable|image|max:5120',
+            'contacts' => 'array',
+            'contacts.*.firstname' => 'required|string|max:255',
+            'contacts.*.lastname' => 'required|string|max:255',
+            'contacts.*.email' => 'required|email|max:255',
+            'contacts.*.idnumber' => 'nullable|string|max:255',
+            'contacts.*.address' => 'nullable|string|max:255',
+            'contacts.*.phonenumbers' => 'required|array|min:1',
+            'contacts.*.phonenumbers.*' => 'required|string|max:30',
+            'accept_terms' => $this->termsUrl ? 'accepted' : 'nullable',
+            'accept_rules' => $this->rulesUrl ? 'accepted' : 'nullable',
+        ];
+    }
+
     protected function validateCurrentStep(): void
     {
         $rules = match ($this->getActualStep()) {
