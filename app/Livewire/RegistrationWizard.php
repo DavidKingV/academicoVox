@@ -24,6 +24,10 @@ class RegistrationWizard extends Component
     use ReportsErrors;
     use WithFileUploads;
 
+    protected array $rules = [
+        'photo' => 'nullable|image|max:5120',
+    ];
+
     public int $currentStep = 1;
 
     public int $totalSteps = 5;
