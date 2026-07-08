@@ -355,7 +355,13 @@ class RegistrationWizard extends Component
             default => [],
         };
 
-        $this->validate(array_filter($rules));
+        $rules = array_filter($rules);
+
+        if ($rules === []) {
+            return;
+        }
+
+        $this->validate($rules);
     }
 
     protected function getActualStep(): string
